@@ -1,10 +1,12 @@
 import React, { useContext, useState } from "react";
 import { ProductContext } from "../../context/ProductProvider";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const ShoppingPage = () => {
   const products = useContext(ProductContext);
   const [wishlist, setWishlist] = useState([]);
+  const navigate=useNavigate();
 
   const toggleWishlist = (productId) => {
     setWishlist((prev) =>
@@ -70,7 +72,7 @@ const ShoppingPage = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {products.map((product) => (
+          {products.reverse().map((product) => (
             <motion.div
               key={product.id}
               whileHover={{ y: -8 }}

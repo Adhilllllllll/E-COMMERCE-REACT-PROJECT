@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../frontpage/NavBar";
-import Footer from "../frontpage/Footer";
+import Navbar from "../pages/NavBar";
+import Footer from "../pages/Footer";
 
 const HomePage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);

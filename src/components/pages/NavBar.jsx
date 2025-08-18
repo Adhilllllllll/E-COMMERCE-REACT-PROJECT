@@ -1,9 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { FiShoppingBag } from "react-icons/fi";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate=useNavigate()
 
   return (
     <motion.nav
@@ -25,7 +27,7 @@ const Navbar = () => {
             {["Home", "Shop", "About"].map((item) => (
               <motion.a
                 key={item}
-                href={item === "Home" ? "/" : `#${item.toLowerCase()}`}
+                href={item === "Home" ? "/" : `${item.toLowerCase()}`}
                 whileHover={{ y: -2 }}
                 className="text-sm uppercase tracking-wider text-gray-600 hover:text-black relative group"
               >
@@ -39,15 +41,18 @@ const Navbar = () => {
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
+              onClick={()=>navigate('/cart')}
               className="p-1 text-gray-600 hover:text-black"
             >
-              <FiShoppingBag className="h-5 w-5" />
+              {/* CART ICONN  */}
+              <FiShoppingBag className="h-5 w-5" /> 
             </motion.button>
             
             {/* Login Button */}
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={()=>navigate('/login')}
               className="text-sm uppercase tracking-wider px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
             >
               Login
