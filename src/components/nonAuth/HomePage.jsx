@@ -1,19 +1,14 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  FiSearch,
-  FiShoppingBag,
-  FiUser,
-  FiChevronRight,
-  FiChevronLeft,
-} from "react-icons/fi";
+import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../frontpage/NavBar";
+import Footer from "../frontpage/Footer";
 
 const HomePage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [hoveredProduct, setHoveredProduct] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const heroSlides = [
     {
@@ -60,21 +55,24 @@ const HomePage = () => {
       name: "Jasmin Blanc",
       category: "Extrait de Parfum",
       price: "$265",
-      image: "https://images.unsplash.com/photo-1582211594533-268f4f1edcb9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjZ8fHBhcmZ1bWV8ZW58MHx8MHx8fDA%3D",
+      image:
+        "https://images.unsplash.com/photo-1582211594533-268f4f1edcb9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjZ8fHBhcmZ1bWV8ZW58MHx8MHx8fDA%3D",
     },
     {
       id: 3,
       name: "Cuir Noir",
       category: "Eau de Parfum",
       price: "$295",
-      image: "https://images.unsplash.com/photo-1632928145408-ef47a7672964?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      image:
+        "https://images.unsplash.com/photo-1632928145408-ef47a7672964?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
     {
       id: 4,
       name: "Rose de Mai",
       category: "Extrait de Parfum",
       price: "$275",
-      image: "https://images.pexels.com/photos/31117962/pexels-photo-31117962.jpeg",
+      image:
+        "https://images.pexels.com/photos/31117962/pexels-photo-31117962.jpeg",
     },
   ];
 
@@ -88,102 +86,9 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
-      {/* Animated Navigation */}
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: [0.6, 0.05, -0.01, 0.9] }}
-        className="fixed w-full z-50 bg-white bg-opacity-90 backdrop-blur-sm border-b border-gray-100"
-      >
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="text-2xl font-serif tracking-wider text-gray-900"
-            >
-              Parfum Éternel
-            </motion.div>
+      <Navbar />
 
-            <div className="hidden md:flex space-x-8">
-              {["Shop", "Collections", "Journal", "About"].map((item) => (
-                <motion.a
-                  key={item}
-                  href="#"
-                  whileHover={{ y: -2 }}
-                  className="text-sm uppercase tracking-wider text-gray-600 hover:text-black relative group"
-                >
-                  {item}
-                  <motion.span className="absolute bottom-0 left-0 w-0 h-px bg-black group-hover:w-full transition-all duration-300" />
-                </motion.a>
-              ))}
-            </div>
-
-            <div className="flex items-center space-x-6">
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                className="p-1 text-gray-600 hover:text-black"
-              >
-                <FiSearch className="h-5 w-5" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                className="p-1 text-gray-600 hover:text-black"
-              >
-                <FiShoppingBag className="h-5 w-5" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                className="md:hidden p-1 text-gray-600 hover:text-black"
-                onClick={() => setMenuOpen(!menuOpen)}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </motion.button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {menuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="md:hidden overflow-hidden"
-            >
-              <div className="px-6 py-4 space-y-4">
-                {["Shop", "Collections", "Journal", "About"].map((item) => (
-                  <motion.a
-                    key={item}
-                    href="#"
-                    className="block text-sm uppercase tracking-wider text-gray-600 hover:text-black"
-                    whileHover={{ x: 5 }}
-                  >
-                    {item}
-                  </motion.a>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.nav>
-
-      {/* Animated Hero Carousel */}
+      {/* Hero Carousel Section */}
       <div className="relative h-screen pt-16">
         <AnimatePresence mode="wait">
           <motion.div
@@ -281,7 +186,6 @@ const HomePage = () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Carousel Controls */}
         <motion.button
           onClick={prevSlide}
           className="absolute left-6 top-1/2 transform -translate-y-1/2 text-white p-2 rounded-full bg-black bg-opacity-30 hover:bg-opacity-50"
@@ -299,7 +203,6 @@ const HomePage = () => {
           <FiChevronRight className="h-6 w-6" />
         </motion.button>
 
-        {/* Carousel Indicators */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
           {heroSlides.map((_, index) => (
             <motion.button
@@ -315,30 +218,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Floating Scroll Indicator */}
-      <motion.div
-        className="absolute bottom-4 left-1/2 transform -translate-x-1/2 hidden md:block"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ repeat: Infinity, duration: 2 }}
-      >
-        <div className="text-white text-sm">Scroll</div>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 mx-auto text-white"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 14l-7 7m0 0l-7-7m7 7V3"
-          />
-        </svg>
-      </motion.div>
-
-      {/* Featured Collection */}
+      {/* Featured Collection Section */}
       <div className="py-20 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <motion.div
@@ -378,7 +258,11 @@ const HomePage = () => {
                     transition={{ duration: 0.4 }}
                   >
                     <div className="w-3/4 h-3/4 bg-gray-200 flex items-center justify-center">
-                     <img  src= {product.image}/>
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   </motion.div>
                   <AnimatePresence>
@@ -421,15 +305,14 @@ const HomePage = () => {
             viewport={{ once: true }}
             className="text-center mt-16"
           >
-            <motion.a
-              href="#"
-              className="inline-block border-b border-black pb-1 text-sm uppercase tracking-wider"
+            <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={()=> navigate('/shop')}
+              className="inline-block border-b border-black pb-1 text-sm uppercase tracking-wider"
+              onClick={() => navigate("/shop")}
             >
               View All Fragrances
-            </motion.a>
+            </motion.button>
           </motion.div>
         </div>
       </div>
@@ -475,7 +358,7 @@ const HomePage = () => {
         </motion.div>
       </div>
 
-      {/* Animated Testimonials */}
+      {/* Testimonials Section */}
       <div className="py-20 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <motion.div
@@ -548,7 +431,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Animated Newsletter */}
+      {/* Newsletter Section */}
       <div className="py-20 px-6 bg-gray-50">
         <div className="max-w-4xl mx-auto bg-white p-8 md:p-12 shadow-lg">
           <motion.div
@@ -597,85 +480,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Animated Footer */}
-      <motion.footer
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-        className="bg-gray-900 text-white py-12 px-6"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-            <div>
-              <h3 className="text-xl font-serif mb-4">Parfum Éternel</h3>
-              <p className="text-gray-400 text-sm">
-                Crafting timeless fragrances for the discerning individual since
-                2010.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-sm uppercase tracking-wider mb-4">Shop</h4>
-              <ul className="space-y-2">
-                {[
-                  "All Fragrances",
-                  "New Arrivals",
-                  "Best Sellers",
-                  "Gift Sets",
-                ].map((item) => (
-                  <motion.li key={item} whileHover={{ x: 5 }}>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white text-sm"
-                    >
-                      {item}
-                    </a>
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-sm uppercase tracking-wider mb-4">
-                Information
-              </h4>
-              <ul className="space-y-2">
-                {["About Us", "Journal", "Contact", "Careers"].map((item) => (
-                  <motion.li key={item} whileHover={{ x: 5 }}>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white text-sm"
-                    >
-                      {item}
-                    </a>
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-sm uppercase tracking-wider mb-4">Connect</h4>
-              <div className="flex space-x-4">
-                {["Instagram", "Facebook", "Twitter", "Pinterest"].map(
-                  (item) => (
-                    <motion.a
-                      key={item}
-                      href="#"
-                      className="text-gray-400 hover:text-white text-sm"
-                      whileHover={{ y: -3 }}
-                    >
-                      {item}
-                    </motion.a>
-                  )
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm">
-            <p>
-              © {new Date().getFullYear()} Parfum Éternel. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </motion.footer>
+      <Footer />
     </div>
   );
 };
