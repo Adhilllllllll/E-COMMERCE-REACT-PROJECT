@@ -1,11 +1,15 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { FiShoppingBag } from "react-icons/fi";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthProvider";
+import LoginButton from "../LoginButton";
+import LogoutButton from "../LogoutButton";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+  const { loggedInUser, setLoggedInUser } = useContext(AuthContext);
 
   return (
     <motion.nav
@@ -25,15 +29,15 @@ const Navbar = () => {
 
           <div className="hidden md:flex space-x-8">
             {["Home", "Shop", "About"].map((item) => (
-              <motion.a
+              <Link
+                to={item === "Home" ? "/" : `${item.toLowerCase()}`}
                 key={item}
-                href={item === "Home" ? "/" : `${item.toLowerCase()}`}
                 whileHover={{ y: -2 }}
                 className="text-sm uppercase tracking-wider text-gray-600 hover:text-black relative group"
               >
                 {item}
                 <motion.span className="absolute bottom-0 left-0 w-0 h-px bg-black group-hover:w-full transition-all duration-300" />
-              </motion.a>
+              </Link>
             ))}
           </div>
 
@@ -41,21 +45,29 @@ const Navbar = () => {
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              onClick={()=>navigate('/cart')}
+              onClick={() => navigate("/cart")}
               className="p-1 text-gray-600 hover:text-black"
             >
               {/* CART ICONN  */}
-              <FiShoppingBag className="h-5 w-5" /> 
+              <FiShoppingBag className="h-5 w-5" />
             </motion.button>
-            
+
             {/* Login Button */}
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={()=>navigate('/login')}
+              onClick={() => navigate("/login")}
               className="text-sm uppercase tracking-wider px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
             >
-              Login
+              {loggedInUser ? (
+                <LogoutButton
+                  onClick={() => {
+                    setLoggedInUser(null);
+                  }}
+                />
+              ) : (
+                <LoginButton onClick={() => setLoggedInUser(loggedInUser)} />
+              )}
             </motion.button>
 
             <motion.button
@@ -106,7 +118,7 @@ const Navbar = () => {
                 className="block text-sm uppercase tracking-wider text-gray-600 hover:text-black"
                 whileHover={{ x: 5 }}
               >
-                Login
+                {loggedInUser ? "LogOut" : "Login"}
               </motion.a>
             </div>
           </motion.div>

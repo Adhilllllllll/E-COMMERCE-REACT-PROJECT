@@ -1,10 +1,12 @@
 import React, { useContext, useState } from "react";
 import { ProductContext } from "../../context/ProductProvider";
+import { CartContext } from "../../context/CartProvider"; 
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 const ShoppingPage = () => {
   const products = useContext(ProductContext);
+  const { addToCart } = useContext(CartContext);  
   const [wishlist, setWishlist] = useState([]);
   const navigate=useNavigate();
 
@@ -14,6 +16,12 @@ const ShoppingPage = () => {
         ? prev.filter((id) => id !== productId)
         : [...prev, productId]
     );
+  };
+
+  ///handle Cart
+  const handleAddToCart = (product) => {
+    addToCart(product);         //  add to cart
+    navigate("/cart");          //  then navigate
   };
 
   const renderRating = (rating) => {
@@ -48,7 +56,6 @@ const ShoppingPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto px-4 py-12">
         <select>
-          
           <option value="Filter Based On Gender">select</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
@@ -150,7 +157,10 @@ const ShoppingPage = () => {
                       </span>
                     )}
                   </div>
-                  <button className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2.5 rounded-lg text-sm font-medium tracking-wide transition-all duration-300 shadow-xs hover:shadow-sm">
+                  <button
+                    onClick={() => handleAddToCart(product)} //  will add to cart & navigate
+                    className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2.5 rounded-lg text-sm font-medium tracking-wide transition-all duration-300 shadow-xs hover:shadow-sm"
+                  >
                     Add to Cart
                   </button>
                 </div>

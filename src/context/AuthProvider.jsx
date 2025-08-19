@@ -6,20 +6,14 @@ import { useNavigate } from "react-router-dom";
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState([]);
+  const [loggedInUser, setLoggedInUser] = useState(null);
 
   const navigate = useNavigate();
 
   //// REGISTER
-
   const registration = async (formData) => {
     try {
-      // if (!formData.email || !formData.password) {
-      //   alert("Email and Password are required!");
-      //   return;
-      // }
       const res = await axios.post(userApi, formData);
-      setUser(res.data);
       navigate("/login");
     } catch (error) {
       console.error("Error registering user:", error);
@@ -27,23 +21,29 @@ const AuthProvider = ({ children }) => {
   };
 
   ////// LOGIN
-
-  const login = async ({ email, password }) => {
+  const login = async (email, password) => {
     try {
-      const { data } = await axios.get(
-        `${userApi}?email=${email}&password=${password}`
-      );
-      setUser(data);
-      //  console.log(user);
-      return true;
+      const { data } = await axios.get(userApi); // get all users
+      const user = data.find(
+        (u) => u.email === email && u.password === password
+      ); // check directly in fetched data
+
+      if (user) {
+        setLoggedInUser(user);
+       
+        alert("Successfully Logged in 🎉");
+        navigate("/");
+      } else {
+        alert("Sorry... User not found 😥");
+      }
     } catch (error) {
-      console.error("error:", error.message);
-      return false;
+      console.error("Login error:", error.message);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, registration, login }}>
+    <AuthContext.Provider value={{ loggedInUser, registration, login, setLoggedInUser }}>
+     
       {children}
     </AuthContext.Provider>
   );

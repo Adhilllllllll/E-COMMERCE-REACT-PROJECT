@@ -1,11 +1,13 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { productAPI } from "../Api";
 import axios from "axios";
+import { AuthContext } from "./AuthProvider";
 
 export const ProductContext = createContext();
 
 const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
+  const { loggedInUser } = useContext(AuthContext);
 
   const fetchProducts = async () => {
     try {

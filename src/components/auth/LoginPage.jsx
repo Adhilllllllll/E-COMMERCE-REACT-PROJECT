@@ -1,27 +1,27 @@
 import React, { useContext, useState } from "react";
 
 import { AuthContext } from "../../context/AuthProvider";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
-  const { login } = useContext(AuthContext);
+  const [storedUser, setUser] = useState(null);
+  const { loggedInUser, login } = useContext(AuthContext);
+  const [isUserExist, setUserExist] = useState(false);
+
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   // form filling
   const handleChange = (event) => {
     setLoginData({ ...loginData, [event.target.name]: event.target.value });
   };
 
-  const handleLogin = async (event) => {
+  const handleLogin = (event) => {
     event.preventDefault();
 
-   const check= login(loginData);
-   if(check){
-    navigate('/')
-   }else{
-    alert('login failed')
-   }
+    login(loginData.email, loginData.password);
+
+    console.log(loggedInUser);
   };
 
   return (
@@ -39,7 +39,7 @@ export default function LoginPage() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form onSubmit={(event) => handleLogin(event)} className="space-y-6">
+          <form className="space-y-6" onSubmit={(event) => handleLogin(event)}>
             <div>
               <label
                 htmlFor="email"
@@ -95,14 +95,17 @@ export default function LoginPage() {
             <div>
               <button
                 type="submit"
-                
+                 
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Login
               </button>
+
+              <Link to = "/register" className="border-amber-300 bg-violet-300 ">
+              <u>New to Anora ? .Register Your Account</u>
+              </Link>
             </div>
           </form>
-           
         </div>
       </div>
     </>

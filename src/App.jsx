@@ -5,6 +5,7 @@ import AuthProvider from "./context/AuthProvider";
 import ProductProvider from "./context/ProductProvider";
 import Navbar from "./components/pages/NavBar";
 import Footer from "./components/pages/Footer";
+import CartProvider from "./context/CartProvider";
 
 const Layout = () => {
   const location = useLocation();
@@ -20,7 +21,7 @@ const Layout = () => {
       <ProductProvider>
         <AppRoutes />
       </ProductProvider>
-      {!shouldHideLayout && <Footer />}
+      {/* {!shouldHideLayout && <Footer />} */}
     </>
   );
 };
@@ -29,7 +30,9 @@ const App = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Layout />
+        <CartProvider>
+          <Layout />
+        </CartProvider>
       </AuthProvider>
     </BrowserRouter>
   );

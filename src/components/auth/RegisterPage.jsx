@@ -1,8 +1,8 @@
-import React,{useContext, useState} from "react";
-import {AuthContext} from '../../context/AuthProvider'
-
-export default function  RegisterPage() {
-  const {registration} =useContext(AuthContext)
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthProvider";
+import { Link } from "react-router-dom";
+export default function RegisterPage() {
+  const { registration } = useContext(AuthContext);
   const [registrationForm, setFormData] = useState({
     name: "",
     email: "",
@@ -22,19 +22,20 @@ export default function  RegisterPage() {
     wishlist: [],
     orderHistory: [],
     created_at: new Date().toISOString(),
-  });
+  });
 
-  const handleChange=(event)=>{
-       setFormData({...registrationForm,[event.target.name]:event.target.value})
-  }
-  
+  const handleChange = (event) => {
+    setFormData({
+      ...registrationForm,
+      [event.target.name]: event.target.value,
+    });
+  };
 
-  const handleSubmit=(event)=>{
+  const handleSubmit = (event) => {
     event.preventDefault();
     // console.log("runnung",registrationForm);
-    registration(registrationForm)
-    
-  }
+    registration(registrationForm);
+  };
 
   return (
     <>
@@ -59,10 +60,17 @@ export default function  RegisterPage() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form  onSubmit={handleSubmit} action="#" method="POST" className="space-y-6">
+          <form
+            onSubmit={handleSubmit}
+            action="#"
+            method="POST"
+            className="space-y-6"
+          >
             <div>
-              
-              <label htmlFor="name" className="block text-sm/6 font-medium text-gray-900">
+              <label
+                htmlFor="name"
+                className="block text-sm/6 font-medium text-gray-900"
+              >
                 Name
               </label>
               <div className="mt-2">
@@ -73,15 +81,16 @@ export default function  RegisterPage() {
                   value={registrationForm.name}
                   required
                   autoComplete="name"
-                  onChange={(event)=>handleChange(event)}
+                  onChange={(event) => handleChange(event)}
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                 />
               </div>
-              
             </div>
             <div>
-              
-              <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
+              <label
+                htmlFor="email"
+                className="block text-sm/6 font-medium text-gray-900"
+              >
                 Email
               </label>
               <div className="mt-2">
@@ -92,20 +101,25 @@ export default function  RegisterPage() {
                   value={registrationForm.email}
                   required
                   autoComplete="email"
-                  onChange={(event)=>handleChange(event)}
+                  onChange={(event) => handleChange(event)}
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                 />
               </div>
-              
             </div>
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
+                <label
+                  htmlFor="password"
+                  className="block text-sm/6 font-medium text-gray-900"
+                >
                   Password
                 </label>
                 <div className="text-sm">
-                  <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+                  <a
+                    href="#"
+                    className="font-semibold text-indigo-600 hover:text-indigo-500"
+                  >
                     Forgot password?
                   </a>
                 </div>
@@ -117,7 +131,7 @@ export default function  RegisterPage() {
                   type="password"
                   required
                   autoComplete="current-password"
-                  onChange={(event)=>handleChange(event)}
+                  onChange={(event) => handleChange(event)}
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                 />
               </div>
@@ -130,17 +144,21 @@ export default function  RegisterPage() {
               >
                 Sign Up
               </button>
+              <Link to="/login">Already Registered ? Login...</Link>
             </div>
           </form>
 
           <p className="mt-10 text-center text-sm/6 text-gray-500">
-            Not a member?{' '}
-            <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+            Not a member?{" "}
+            <a
+              href="#"
+              className="font-semibold text-indigo-600 hover:text-indigo-500"
+            >
               Start a 14 day free trial
             </a>
           </p>
         </div>
       </div>
     </>
-  )
+  );
 }
