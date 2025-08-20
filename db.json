@@ -451,7 +451,18 @@
       },
       "isBlock": false,
       "isDelete": false,
-      "cart": [],
+      "cart": [
+        {
+          "productId": "3",
+          "name": "Gucci Bloom",
+          "brand": "Gucci",
+          "price": 130,
+          "image": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRzTfajnTPBEkBhWPp1tiFNlxnBdoBwNrS8VBKB7bgNEJqhdzb4Yu_Qj0AEpkQsHGXtdI3E9h62Xeou0Q45udSU8zm5PwFUF15tw55Hi_1FVp6asDh5EVOOLKf6mGmr0_TF2aP6ViiEhR9D&usqp=CAc",
+          "size": "50ml",
+          "quantity": 6,
+          "id": 1755673969449
+        }
+      ],
       "orders": [],
       "wishlist": [],
       "orderHistory": [],

@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-
 import { AuthContext } from "../../context/AuthProvider";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -11,26 +10,38 @@ export default function LoginPage() {
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
-  // form filling
-  const handleChange = (event) => {
-    setLoginData({ ...loginData, [event.target.name]: event.target.value });
-  };
+  
+  useEffect(() => {
+  // Check context
+  if (loggedInUser) {
+    navigate("/", { replace: true });
+    return;
+  }
 
-// useEffect(()=>{
-//   const isLogin=localStorage.getItem('user')
-//   if(isLogin){
-//     console.log('tesrt')
-//     navigate('/')
-//   }
-// },[])
+  // Check localStorage (for page refresh)
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {
+    setUser(JSON.parse(storedUser));   // update state
+    navigate("/", { replace: true });  // redirect
+  }
+}, [loggedInUser, navigate]);
 
-  const handleLogin = (event) => {
-    event.preventDefault();
+// form filling
+const handleChange = (event) => {
+  setLoginData({ ...loginData, [event.target.name]: event.target.value });
+};
 
-    login(loginData.email, loginData.password);
+const handleLogin = (event) => {
+  event.preventDefault();
 
-    console.log(loggedInUser);
-  };
+  // Call AuthContext login
+  login(loginData.email, loginData.password);
+
+  // Just log loginData (not loggedInUser, since it's async update)
+  console.log("Login attempt:", loginData);
+};
+
+
 
   return (
     <>
@@ -115,7 +126,8 @@ export default function LoginPage() {
             </div>
           </form>
         </div>
-      </div>
+        </div>
+      
     </>
   );
 }

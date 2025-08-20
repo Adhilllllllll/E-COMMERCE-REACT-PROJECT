@@ -53,22 +53,24 @@ const Navbar = () => {
             </motion.button>
 
             {/* Login Button */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate("/login")}
-              className="text-sm uppercase tracking-wider px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
-            >
-              {loggedInUser ? (
-                <LogoutButton
-                  onClick={() => {
-                    setLoggedInUser(null);
-                  }}
-                />
-              ) : (
-                <LoginButton onClick={() => setLoggedInUser(loggedInUser)} />
-              )}
-            </motion.button>
+          <motion.button
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  onClick={() => navigate("/login")}
+  className="text-sm uppercase tracking-wider px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
+>
+ {loggedInUser ? (
+<LogoutButton
+  onClick={() => {
+    setLoggedInUser(null);
+    localStorage.removeItem("user"); 
+    navigate("/login");
+  }}
+/>
+) : (
+  <LoginButton onClick={() => navigate("/login")} />
+)}
+</motion.button>
 
             <motion.button
               whileHover={{ scale: 1.1 }}

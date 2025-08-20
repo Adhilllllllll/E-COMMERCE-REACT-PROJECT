@@ -26,11 +26,11 @@ const AuthProvider = ({ children }) => {
       const { data } = await axios.get(userApi); // get all users
       const user = data.find(
         (u) => u.email === email && u.password === password
-      ); // check directly in fetched data
+      );
 
       if (user) {
         setLoggedInUser(user);
-       
+            localStorage.setItem("user", JSON.stringify(user));
         alert("Successfully Logged in 🎉");
         navigate("/");
       } else {

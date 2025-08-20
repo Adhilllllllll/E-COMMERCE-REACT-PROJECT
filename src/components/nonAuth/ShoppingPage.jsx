@@ -8,7 +8,7 @@ const ShoppingPage = () => {
   const products = useContext(ProductContext);
   const { addToCart } = useContext(CartContext);  
   const [wishlist, setWishlist] = useState([]);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const toggleWishlist = (productId) => {
     setWishlist((prev) =>
@@ -18,10 +18,15 @@ const ShoppingPage = () => {
     );
   };
 
-  ///handle Cart
-  const handleAddToCart = (product) => {
-    addToCart(product);         //  add to cart
-    // navigate("/cart");          //  then navigate
+  // Handle product card click
+  const handleProductClick = (productId) => {
+    navigate(`/productdetails/${productId}`);
+  };
+
+  // Handle Add to Cart
+  const handleAddToCart = (product, e) => {
+    e.stopPropagation(); // Prevent navigation to product details
+    addToCart(product);
   };
 
   const renderRating = (rating) => {
@@ -55,18 +60,20 @@ const ShoppingPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto px-4 py-12">
-        <select>
-          <option value="Filter Based On Gender">select</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Unisex">Unisex</option>
-        </select>
+        <div className="flex gap-4 mb-6">
+          <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent">
+            <option value="Filter Based On Gender">Filter by Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Unisex">Unisex</option>
+          </select>
 
-        <select>
-          <option value="category">Category</option>
-          <option value="indoor">Indoor</option>
-          <option value="outdoor">Outdoor</option>
-        </select>
+          <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent">
+            <option value="category">Category</option>
+            <option value="indoor">Indoor</option>
+            <option value="outdoor">Outdoor</option>
+          </select>
+        </div>
 
         <div className="text-center mb-16">
           <h1 className="text-4xl font-light text-gray-800 mb-2 tracking-tight">
@@ -83,11 +90,15 @@ const ShoppingPage = () => {
             <motion.div
               key={product.id}
               whileHover={{ y: -8 }}
-              className="relative bg-white rounded-lg shadow-xs hover:shadow-md transition-all duration-300 flex flex-col border border-gray-200/80 overflow-hidden group"
+              className="relative bg-white rounded-lg shadow-xs hover:shadow-md transition-all duration-300 flex flex-col border border-gray-200/80 overflow-hidden group cursor-pointer"
+              onClick={() => handleProductClick(product.id)}
             >
               {/* Wishlist Button */}
               <button
-                onClick={() => toggleWishlist(product.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleWishlist(product.id);
+                }}
                 className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/80 backdrop-blur-sm hover:scale-110 transition-all duration-200 shadow-xs"
                 aria-label="Add to wishlist"
               >
@@ -158,7 +169,7 @@ const ShoppingPage = () => {
                     )}
                   </div>
                   <button
-                    onClick={() => handleAddToCart(product)} //  will add to cart & navigate
+                    onClick={(e) => handleAddToCart(product, e)}
                     className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2.5 rounded-lg text-sm font-medium tracking-wide transition-all duration-300 shadow-xs hover:shadow-sm"
                   >
                     Add to Cart
