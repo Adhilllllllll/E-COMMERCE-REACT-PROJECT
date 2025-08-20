@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "../../context/AuthProvider";
 import { Link, useNavigate } from "react-router-dom";
@@ -15,6 +15,14 @@ export default function LoginPage() {
   const handleChange = (event) => {
     setLoginData({ ...loginData, [event.target.name]: event.target.value });
   };
+
+// useEffect(()=>{
+//   const isLogin=localStorage.getItem('user')
+//   if(isLogin){
+//     console.log('tesrt')
+//     navigate('/')
+//   }
+// },[])
 
   const handleLogin = (event) => {
     event.preventDefault();

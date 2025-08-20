@@ -15,7 +15,7 @@ const ProductProvider = ({ children }) => {
       setProducts(data);
       console.log(products);
     } catch (error) {
-      console.error(error.messag);
+      console.error(error.message);
     }
   };
 

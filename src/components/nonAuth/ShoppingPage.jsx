@@ -21,7 +21,7 @@ const ShoppingPage = () => {
   ///handle Cart
   const handleAddToCart = (product) => {
     addToCart(product);         //  add to cart
-    navigate("/cart");          //  then navigate
+    // navigate("/cart");          //  then navigate
   };
 
   const renderRating = (rating) => {

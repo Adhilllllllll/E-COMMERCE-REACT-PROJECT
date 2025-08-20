@@ -1,12 +1,10 @@
 import React, { useContext } from "react";
 import { CartContext } from "../../context/CartProvider";
-
 import { AuthContext } from "../../context/AuthProvider";
 
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity } = useContext(CartContext);
   const { user } = useContext(AuthContext);
-
 
   // Calculate totals
   const subtotal = cart.reduce(
@@ -46,16 +44,16 @@ const Cart = () => {
                     <div className="flex justify-between items-center mt-2">
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => updateQuantity(item.id, -1)}
                           className="px-2 border rounded"
                           disabled={item.quantity <= 1}
+                          onClick={() => updateQuantity(item.id, -1)}
                         >
                           -
                         </button>
                         <span>{item.quantity}</span>
                         <button
-                          onClick={() => updateQuantity(item.id, 1)}
                           className="px-2 border rounded"
+                          onClick={() => updateQuantity(item.id, 1)}
                         >
                           +
                         </button>
@@ -74,8 +72,8 @@ const Cart = () => {
                   </div>
                 </div>
                 <button
-                  onClick={() => removeFromCart(item.id)}
                   className="text-red-500 text-sm mt-2"
+                  onClick={() => removeFromCart(item.id)}
                 >
                   Remove
                 </button>

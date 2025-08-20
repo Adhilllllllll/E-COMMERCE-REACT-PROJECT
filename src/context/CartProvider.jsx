@@ -8,114 +8,98 @@ export const CartContext = createContext();
 
 const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
-  const { loggedInUser } = useContext(AuthContext); 
-  console.log(loggedInUser);
-
-  console.log(loggedInUser, "from caRT PROVIDERRRRRR");
+  const { loggedInUser } = useContext(AuthContext);
   const navigate = useNavigate();
-
-  //function to fetch cartt
-  async function fetchCart(userID) {
-    try {
-      const { data } = await axios.get(`http://localhost:3000/user/${userID}`);
-      console.log(data);
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
 
   // Fetch cart items when user logs in
   useEffect(() => {
-    fetchCart(loggedInUser?.id);
-  }, []);
+    if (loggedInUser?.id) {
+      fetchCart(loggedInUser.id);
+    } else {
+      setCart([]); // clear cart if logged out
+    }
+  }, [loggedInUser]);
 
-
-
-  // useEffect(() => {
-  //   if (loggedInUser && loggedInUser.id) {
-  //     fetchCart(loggedInUser.id);
-  //   } else {
-  //     setCart([]); // clear cart when logged out
-  //   }
-  // }, [loggedInUser]);
-
-  // const fetchCart = async (userId) => {
-  //   try {
-  //     const { data } = await axios.get(`${CART_API}?userId=${userId}`);
-  //     setCart(data);
-  //   } catch (err) {
-  //     console.error("❌ Error fetching cart:", err);
-  //   }
-  // };
-
-  // Add to Cart
-  const addToCart = async (product) => {
+  // Fetch cart for user
+  const fetchCart = async (userId) => {
     try {
-      console.log(loggedInUser);
-      if (!loggedInUser) {
-        alert("⚠️ You must be logged in to add items to cart.");
-        navigate('/login');
-        
-      }
-
-      const existingItem = cart.find((item) => item.productId === product.id);
-
-      if (existingItem) {
-        await updateQuantity(existingItem.id, 1);
-      } else {
-        const newItem = {
-          userId: loggedInUser.id,
-          productId: product.id,
-          name: product.title || product.name,
-          brand: product.brand,
-          price: product.price,
-          image: product.image || product.images?.[0],
-          size: product.size || "50ml",
-          quantity: 1,
-        };
-
-        const { data } = await axios.post(CART_API, newItem);
-        setCart((prev) => [...prev, data]);
-      }
-
-      // ✅ redirect to cart page after adding
-      // navigate("/cart");
+      const { data } = await axios.get(`${userApi}/${userId}`);
+      setCart(data.cart || []);
     } catch (err) {
-      console.error("❌ Error adding to cart:", err);
+      console.error("❌ Error fetching cart:", err);
     }
   };
 
+  // Helper to update user's cart on server
+  const updateUserCart = async (userId, newCart) => {
+    try {
+      await axios.patch(`${userApi}/${userId}`, { cart: newCart });
+      setCart(newCart);
+    } catch (err) {
+      console.error("❌ Error updating cart:", err);
+    }
+  };
+
+  // Add to Cart
+  const addToCart = async (product) => {
+    if (!loggedInUser) {
+      alert("⚠️ You must be logged in to add items to cart.");
+      navigate('/login');
+      return;
+    }
+    const existingItem = cart.find((item) => item.productId === product.id);
+    let newCart;
+    if (existingItem) {
+      newCart = cart.map((item) =>
+        item.productId === product.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+    } else {
+      const newItem = {
+        productId: product.id,
+        name: product.title || product.name,
+        brand: product.brand,
+        price: product.price,
+        image: product.image || product.images?.[0],
+        size: product.size || "50ml",
+        quantity: 1,
+        id: Date.now() // local id for rendering
+      };
+      newCart = [...cart, newItem];
+    }
+    await updateUserCart(loggedInUser.id, newCart);
+    navigate("/cart");
+  };
+
   // Remove from Cart
-  // const removeFromCart = async (cartItemId) => {
-  //   try {
-  //     await axios.delete(`${CART_API}/${cartItemId}`);
-  //     setCart((prev) => prev.filter((item) => item.id !== cartItemId));
-  //   } catch (err) {
-  //     console.error("❌ Error removing from cart:", err);
-  //   }
-  // };
+  const removeFromCart = async (cartItemId) => {
+    if (!loggedInUser) return;
+    const newCart = cart.filter((item) => item.id !== cartItemId);
+    await updateUserCart(loggedInUser.id, newCart);
+  };
 
   // Update Quantity
-  // const updateQuantity = async (cartItemId, change) => {
-  //   try {
-  //     const item = cart.find((c) => c.id === cartItemId);
-  //     if (!item) return;
-
-  //     const newQuantity = Math.max(1, item.quantity + change);
-  //     const updatedItem = { ...item, quantity: newQuantity };
-
-  //     await axios.put(`${CART_API}/${cartItemId}`, updatedItem);
-
-  //     setCart((prev) =>
-  //       prev.map((c) => (c.id === cartItemId ? updatedItem : c))
-  //     );
-  //   } catch (err) {
-  //     console.error("❌ Error updating quantity:", err);
-  //   }
-  // };
+  const updateQuantity = async (cartItemId, change) => {
+    if (!loggedInUser) return;
+    const newCart = cart.map((item) =>
+      item.id === cartItemId
+        ? { ...item, quantity: Math.max(1, item.quantity + change) }
+        : item
+    );
+    await updateUserCart(loggedInUser.id, newCart);
+  };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        fetchCart,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
