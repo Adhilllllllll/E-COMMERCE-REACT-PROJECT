@@ -6,6 +6,7 @@ import ProductProvider from "./context/ProductProvider";
 import Navbar from "./components/pages/NavBar";
 import Footer from "./components/pages/Footer";
 import CartProvider from "./context/CartProvider";
+import WishlistProvider from "./context/WishListProvider"; // Fixed casing to match file name
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -30,15 +31,19 @@ const Layout = () => {
 
 const App = () => {
   return (
+
     <BrowserRouter>
       <AuthProvider>
         <CartProvider>
-          <Layout />
-          {/* ✅ Toast container globally */}
-          <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
+          <WishlistProvider> {/* Add WishlistProvider here */}
+            <Layout />
+            {/* ✅ Toast container globally */}
+            <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
+          </WishlistProvider>
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>
+
   );
 };
 

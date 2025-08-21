@@ -1,14 +1,24 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ProductContext } from "../../context/ProductProvider";
 import { CartContext } from "../../context/CartProvider";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { WishlistContext } from "../../context/WishListProvider";
+import Swal from "sweetalert2";
 
 const ShoppingPage = () => {
-  const products = useContext(ProductContext);
+  const {
+     
+    filteredProducts,
+    filterProduct,
+    productSearch,
+    setPsearch,
+  } = useContext(ProductContext);
   const { cart, addToCart } = useContext(CartContext);
+  const { addToWishlist } = useContext(WishlistContext);
   const [wishlist, setWishlist] = useState([]);
   const navigate = useNavigate();
+  const [select, setSelect] = useState("all");
 
   const toggleWishlist = (productId) => {
     setWishlist((prev) =>
@@ -16,6 +26,35 @@ const ShoppingPage = () => {
         ? prev.filter((id) => id !== productId)
         : [...prev, productId]
     );
+    // console.log(wishlist);
+
+    // need sent wishlist into wishlist provider
+    addToWishlist(productId);
+    handleMessage()
+  };
+
+
+   const handleMessage = () => {
+      Swal.fire({
+    toast: true,              // Make it a toast
+    position: "top-end",      // Position of the toast
+    icon: "success",          // Icon type (success, error, info, warning, question)
+    title: "Added to wishlist!", // Toast message
+    showConfirmButton: false, // No confirmation button for toast
+    timer: 2000,              // Auto-close after 2 seconds
+    timerProgressBar: true,
+  });
+      console.log("hiiiiiii");
+    };
+
+  //filtering
+
+  useEffect(() => {
+    filterProduct(select);
+  }, [select]);
+
+  const handleFilter = (e) => {
+    setSelect(e.target.value);
   };
 
   const handleProductClick = (productId) => {
@@ -60,22 +99,26 @@ const ShoppingPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="container mx-auto px-4 py-12">
+    <div className="min-h-screen  bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="container  mx-auto px-4 py-12">
         {/* Filters */}
-        <div className="flex gap-4 mb-6">
-          <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent">
-            <option value="Filter Based On Gender">Filter by Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Unisex">Unisex</option>
+        <div className="flex gap-4 mb-6 mt-10">
+          <select
+            value={select}
+            onChange={(e) => handleFilter(e)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent"
+          >
+            <option value="all">All</option>
+            <option value="Men">Men</option>
+            <option value="Women">Female</option>
+            {/* <option value="Unisex">Unisex</option> */}
           </select>
 
-          <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent">
+          {/* <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent">
             <option value="category">Category</option>
             <option value="indoor">Indoor</option>
             <option value="outdoor">Outdoor</option>
-          </select>
+          </select> */}
         </div>
 
         {/* Heading */}
@@ -87,11 +130,24 @@ const ShoppingPage = () => {
           <p className="text-gray-500 font-medium">
             Discover our selection of premium products
           </p>
+<div className="relative w-full max-w-sm mx-auto">
+  <input
+    type="text"
+    placeholder="Search products..."
+    value={productSearch}
+    onChange={(e) => setPsearch(e.target.value)}
+    className="w-full pl-10 pr-4 py-2 rounded-lg shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors duration-200"
+  />
+  <span className="absolute left-3 top-2.5 text-gray-400">
+    🔍
+  </span>
+</div>
+
         </div>
 
         {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {products
+          {filteredProducts
             .slice()
             .reverse()
             .map((product) => (

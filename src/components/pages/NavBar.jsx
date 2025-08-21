@@ -1,16 +1,18 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
+import { useWishlist } from "../../context/WishListProvider"; // Import the wishlist context
 import LoginButton from "../LoginButton";
 import LogoutButton from "../LogoutButton";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiShoppingBag } from "react-icons/fi";
+import { FiShoppingBag, FiHeart } from "react-icons/fi"; // Added FiHeart icon
 import Swal from "sweetalert2";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { loggedInUser, logout } = useContext(AuthContext);
+  const { wishlistCount } = useWishlist(); // Get wishlist count from context
 
   // ✅ Confirm before logout
   const handleLogout = () => {
@@ -67,6 +69,21 @@ const Navbar = () => {
 
         {/* RIGHT SIDE ICONS */}
         <div className="flex items-center space-x-6">
+          {/* WISHLIST ICON */}
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate("/wishlist")}
+            className="relative p-1 text-gray-600 hover:text-rose-500"
+          >
+            <FiHeart className="h-5 w-5" />
+            {wishlistCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {wishlistCount}
+              </span>
+            )}
+          </motion.button>
+
           {/* CART ICON */}
           <motion.button
             whileHover={{ scale: 1.1 }}
@@ -128,6 +145,15 @@ const Navbar = () => {
                   {item}
                 </motion.a>
               ))}
+
+              {/* Wishlist link in mobile menu */}
+              <motion.a
+                href="/wishlist"
+                className="block text-sm uppercase tracking-wider text-gray-600 hover:text-rose-500"
+                whileHover={{ x: 5 }}
+              >
+                Wishlist {wishlistCount > 0 && `(${wishlistCount})`}
+              </motion.a>
 
               {/* ✅ Orders only if logged in */}
               {loggedInUser && (

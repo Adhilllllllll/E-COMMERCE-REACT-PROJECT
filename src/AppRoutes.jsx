@@ -9,10 +9,12 @@ import ProductDetails from "./components/nonAuth/ProductDetails";
 import Payment from "./components/pages/Payment";
 import Order from "./components/pages/Order";
 import OrderHistory from "./components/pages/OrderHistory";  // ✅ new
+import Wishlist from "./components/pages/Wishlist";
 
 const AppRoutes = () => {
   return (
     <Routes>
+      <Route path="/wishlist" element={<Wishlist />} />
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
