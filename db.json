@@ -453,19 +453,91 @@
       "isDelete": false,
       "cart": [
         {
-          "productId": "3",
-          "name": "Gucci Bloom",
-          "brand": "Gucci",
-          "price": 130,
-          "image": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRzTfajnTPBEkBhWPp1tiFNlxnBdoBwNrS8VBKB7bgNEJqhdzb4Yu_Qj0AEpkQsHGXtdI3E9h62Xeou0Q45udSU8zm5PwFUF15tw55Hi_1FVp6asDh5EVOOLKf6mGmr0_TF2aP6ViiEhR9D&usqp=CAc",
+          "productId": "2",
+          "name": "Oud Satin Mood",
+          "brand": "davidoff",
+          "price": 250,
+          "image": "https://images.unsplash.com/photo-1588619872756-bb955fe22dc2?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8",
           "size": "50ml",
-          "quantity": 6,
-          "id": 1755673969449
+          "quantity": 1,
+          "id": 1755754380471
         }
       ],
-      "orders": [],
+      "orders": [
+        {
+          "id": "1755754315928",
+          "date": "2025-08-21T05:31:55.928Z",
+          "items": [
+            {
+              "productId": "1",
+              "name": "Bleu de Chanel",
+              "brand": "Chanel",
+              "price": 115,
+              "image": "https://images.unsplash.com/photo-1592914567656-9e0eecfbe694?w=126&dpr=2&h=147&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXRodW1ibmFpbHx8MTA2NTI2OTB8fGVufDB8fHx8fA%3D%3D",
+              "size": "50ml",
+              "quantity": 1,
+              "id": 1755751505838
+            },
+            {
+              "productId": "2",
+              "name": "Oud Satin Mood",
+              "brand": "davidoff",
+              "price": 250,
+              "image": "https://images.unsplash.com/photo-1588619872756-bb955fe22dc2?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8",
+              "size": "50ml",
+              "quantity": 3,
+              "id": 1755751617918
+            }
+          ],
+          "total": 951.5,
+          "status": "processing",
+          "shippingAddress": {
+            "mobile": "",
+            "street": "",
+            "city": "",
+            "state": "",
+            "pin": ""
+          }
+        }
+      ],
       "wishlist": [],
-      "orderHistory": [],
+      "orderHistory": [
+        {
+          "id": "1755754315928",
+          "date": "2025-08-21T05:31:55.928Z",
+          "items": [
+            {
+              "productId": "1",
+              "name": "Bleu de Chanel",
+              "brand": "Chanel",
+              "price": 115,
+              "image": "https://images.unsplash.com/photo-1592914567656-9e0eecfbe694?w=126&dpr=2&h=147&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXRodW1ibmFpbHx8MTA2NTI2OTB8fGVufDB8fHx8fA%3D%3D",
+              "size": "50ml",
+              "quantity": 1,
+              "id": 1755751505838
+            },
+            {
+              "productId": "2",
+              "name": "Oud Satin Mood",
+              "brand": "davidoff",
+              "price": 250,
+              "image": "https://images.unsplash.com/photo-1588619872756-bb955fe22dc2?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8",
+              "size": "50ml",
+              "quantity": 3,
+              "id": 1755751617918
+            }
+          ],
+          "total": 951.5,
+          "status": "processing",
+          "shippingAddress": {
+            "mobile": "",
+            "street": "",
+            "city": "",
+            "state": "",
+            "pin": ""
+          }
+        }
+      ],
       "created_at": "2025-08-18T10:22:34.330Z"
     }
   ]

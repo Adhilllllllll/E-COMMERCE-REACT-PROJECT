@@ -1,10 +1,12 @@
 import React, { useContext } from "react";
 import { CartContext } from "../../context/CartProvider";
 import { AuthContext } from "../../context/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity } = useContext(CartContext);
   const { user } = useContext(AuthContext);
+  const navigate =useNavigate();
 
   // Calculate totals
   const subtotal = cart.reduce(
@@ -132,7 +134,7 @@ const Cart = () => {
               </label>
             </div>
 
-            <button className="w-full bg-black text-white py-3 rounded font-medium">
+            <button  onClick={()=>navigate('/payment')}   className="w-full bg-black text-white py-3 rounded font-medium">
               Proceed to Checkout
             </button>
 

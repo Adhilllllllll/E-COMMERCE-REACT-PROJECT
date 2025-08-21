@@ -6,6 +6,8 @@ import RegisterPage from "./components/auth/RegisterPage";
 import ShoppingPage from "./components/nonAuth/ShoppingPage";
 import Cart from "./components/pages/Cart";
 import ProductDetails from "./components/nonAuth/ProductDetails";
+import Payment from "./components/pages/Payment";
+ 
 
 const AppRoutes = () => {
   return (
@@ -16,7 +18,11 @@ const AppRoutes = () => {
       <Route path="/shop" element={<ShoppingPage />} />
 
       <Route path="/cart" element={<Cart />} />
+      <Route path="/payment" element={<Payment />} />
       <Route path="/productdetails/:id" element={<ProductDetails />} />
+      
+      
+
 
       <Route />
     </Routes>
