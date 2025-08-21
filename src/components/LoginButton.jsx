@@ -1,8 +1,12 @@
-import React from 'react'
-
-export default function LoginButton() {
-
+const LoginButton = ({ onClick }) => {
   return (
-    <div>Login</div>
-  )
-}
+    <button
+      onClick={onClick}
+      className="text-sm uppercase tracking-wider text-gray-600 hover:text-black"
+    >
+      Login
+    </button>
+  );
+};
+
+export default LoginButton;

@@ -6,14 +6,13 @@ import { useNavigate } from "react-router-dom";
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity } = useContext(CartContext);
   const { user } = useContext(AuthContext);
-  const navigate =useNavigate();
+  const navigate = useNavigate();
 
-  // Calculate totals
   const subtotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-  const tax = subtotal * 0.08; // Example 8% tax
+  const tax = subtotal * 0.08;
   const total = subtotal + tax;
 
   return (
@@ -26,7 +25,6 @@ const Cart = () => {
         </div>
       ) : (
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Cart Items */}
           <div className="flex-1">
             {cart.map((item) => (
               <div key={item.id} className="border-b py-4">
@@ -83,27 +81,8 @@ const Cart = () => {
             ))}
           </div>
 
-          {/* Order Summary */}
           <div className="md:w-80 bg-gray-50 p-4 rounded-lg h-fit">
             <h2 className="text-xl font-bold mb-4">Order Summary</h2>
-
-            <div className="mb-4">
-              <h3 className="font-medium mb-2">Promo Code</h3>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Enter promo code"
-                  className="flex-1 border p-2 rounded text-sm"
-                />
-                <button className="bg-black text-white px-4 py-2 rounded text-sm">
-                  Apply
-                </button>
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                Try WELCOME10 or SAVE20
-              </p>
-            </div>
-
             <div className="border-t pt-4 mb-4">
               <div className="flex justify-between mb-2">
                 <span>Subtotal</span>
@@ -123,38 +102,15 @@ const Cart = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 mb-4">
-              <input type="checkbox" id="freeShipping" checked readOnly />
-              <label htmlFor="freeShipping" className="text-sm">
-                Free Shipping
-                <br />
-                <span className="text-xs text-gray-500">
-                  On orders over $75, Delivery in 3-5 business days.
-                </span>
-              </label>
-            </div>
-
-            <button  onClick={()=>navigate('/payment')}   className="w-full bg-black text-white py-3 rounded font-medium">
+            <button
+              onClick={() => navigate("/payment")}
+              className="w-full bg-black text-white py-3 rounded font-medium"
+            >
               Proceed to Checkout
             </button>
-
-            <p className="text-xs text-center mt-4 text-gray-500">
-              Secure checkout powered by SSL encryption
-            </p>
           </div>
         </div>
       )}
-
-      {/* Help Section */}
-      <div className="mt-12 border-t pt-6">
-        <h2 className="text-lg font-medium mb-2">Need Help?</h2>
-        <p className="mb-4">
-          Our fragrance experts are here to help you find the perfect scent.
-        </p>
-        <button className="border border-black px-4 py-2 rounded">
-          Contact Support
-        </button>
-      </div>
     </div>
   );
 };

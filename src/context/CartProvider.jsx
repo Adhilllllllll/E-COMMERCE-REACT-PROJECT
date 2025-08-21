@@ -7,20 +7,27 @@ import { userApi } from "../Api";
 export const CartContext = createContext();
 
 const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    const storedCart = localStorage.getItem("cart");
+    return storedCart ? JSON.parse(storedCart) : [];
+  });
+
   const { loggedInUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Fetch cart items when user logs in
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
   useEffect(() => {
     if (loggedInUser?.id) {
+      setCart(loggedInUser.cart || []);
       fetchCart(loggedInUser.id);
     } else {
-      setCart([]); // clear cart if logged out
+      setCart([]);
     }
   }, [loggedInUser]);
 
-  // Fetch cart for user
   const fetchCart = async (userId) => {
     try {
       const { data } = await axios.get(`${userApi}/${userId}`);
@@ -30,7 +37,6 @@ const CartProvider = ({ children }) => {
     }
   };
 
-  // Helper to update user's cart on server
   const updateUserCart = async (userId, newCart) => {
     try {
       await axios.patch(`${userApi}/${userId}`, { cart: newCart });
@@ -40,13 +46,14 @@ const CartProvider = ({ children }) => {
     }
   };
 
-  // Add to Cart
   const addToCart = async (product) => {
     if (!loggedInUser) {
       alert("⚠️ You must be logged in to add items to cart.");
-      navigate('/login');
+      navigate("/login");
       return;
     }
+
+    // ✅ use productId consistently
     const existingItem = cart.find((item) => item.productId === product.id);
     let newCart;
     if (existingItem) {
@@ -64,22 +71,19 @@ const CartProvider = ({ children }) => {
         image: product.image || product.images?.[0],
         size: product.size || "50ml",
         quantity: 1,
-        id: Date.now() // local id for rendering
+        id: Date.now(),
       };
       newCart = [...cart, newItem];
     }
     await updateUserCart(loggedInUser.id, newCart);
-    navigate("/cart");
   };
 
-  // Remove from Cart
   const removeFromCart = async (cartItemId) => {
     if (!loggedInUser) return;
     const newCart = cart.filter((item) => item.id !== cartItemId);
     await updateUserCart(loggedInUser.id, newCart);
   };
 
-  // Update Quantity
   const updateQuantity = async (cartItemId, change) => {
     if (!loggedInUser) return;
     const newCart = cart.map((item) =>

@@ -1,87 +1,95 @@
-import React, { useContext, useState } from 'react';
- import { CartContext } from "../../context/CartProvider";
+import React, { useContext, useState } from "react";
+import { CartContext } from "../../context/CartProvider";
 import { AuthContext } from "../../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { userApi } from '../../Api';
+import { userApi } from "../../Api";
+import { toast } from "react-toastify";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+
+// ✅ Validation schema
+const validationSchema = Yup.object().shape({
+  address: Yup.object().shape({
+    street: Yup.string().required("Street is required"),
+    city: Yup.string().required("City is required"),
+    state: Yup.string().required("State is required"),
+    pin: Yup.string()
+      .required("PIN is required")
+      .matches(/^\d{6}$/, "PIN must be 6 digits"),
+    mobile: Yup.string()
+      .required("Mobile number is required")
+      .matches(/^[0-9]{10}$/, "Must be a valid 10-digit number"),
+  }),
+  paymentMethod: Yup.string().required("Select a payment method"),
+  upiId: Yup.string().when("paymentMethod", {
+    is: "upi",
+    then: Yup.string()
+      .required("UPI ID is required")
+      .matches(/^[\w.-]+@[\w.-]+$/, "Enter a valid UPI ID"),
+  }),
+});
 
 const Payment = () => {
-   const { cart, removeFromCart, fetchCart }=useContext(CartContext)
+  const { cart } = useContext(CartContext);
   const { loggedInUser, setLoggedInUser } = useContext(AuthContext);
   const navigate = useNavigate();
-  
-  const [paymentMethod, setPaymentMethod] = useState('creditCard');
-  const [cardDetails, setCardDetails] = useState({
-    number: '',
-    name: '',
-    expiry: '',
-    cvv: ''
-  });
-  const [isProcessing, setIsProcessing] = useState(false);
-  
-  // Calculate order totals
-  const itemCost = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-  const tax = itemCost * 0.1; // 10% tax
+
+  const [selectedAddress, setSelectedAddress] = useState(
+    loggedInUser?.address ? loggedInUser.address : null
+  );
+  const [showAddressForm, setShowAddressForm] = useState(!selectedAddress);
+
+  const itemCost = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+  const tax = itemCost * 0.1;
   const totalCost = itemCost + tax;
-  
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setCardDetails(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-  
-  const handlePayment = async () => {
-    setIsProcessing(true);
-    
+
+  const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      // Create order object
+      const addressToUse = values.address;
+
       const order = {
         id: Date.now().toString(),
         date: new Date().toISOString(),
         items: cart,
         total: totalCost,
-        status: 'processing',
-        shippingAddress: loggedInUser.address
+        status: "processing",
+        shippingAddress: addressToUse,
+        paymentMethod: values.paymentMethod,
       };
-      
-      // Update user in the database
+
       const updatedUser = {
         ...loggedInUser,
-        orders: [...loggedInUser.orders, order],
-        cart: [], // Clear cart after successful payment
-        orderHistory: [...loggedInUser.orderHistory, order]
+        address: addressToUse,
+        orders: [...(loggedInUser.orders || []), order],
+        cart: [], // ✅ clear cart
       };
-      
-      // Send update to server
-      await axios.patch(`${userApi}/${loggedInUser.id}`, updatedUser);
-      
-      // Update local state
+
+      await axios.patch(`${userApi}/${updatedUser.id}`, updatedUser);
+
       setLoggedInUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
-      
-      // Clear cart in context
-      fetchCart(loggedInUser.id);
-      
-      // Navigate to success page
-      navigate('/order-success', { state: { order } });
-      
+
+      toast.success("🎉 Order placed successfully!");
+      navigate("/order", { state: { order } });
     } catch (error) {
       console.error("Payment processing error:", error);
-      alert("Payment failed. Please try again.");
+      toast.error("Payment failed. Please try again.");
     } finally {
-      setIsProcessing(false);
+      setSubmitting(false);
     }
   };
-  
+
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen  flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">Your cart is empty</h2>
-          <button 
-            onClick={() => navigate('/products')}
+          <button
+            onClick={() => navigate("/products")}
             className="bg-emerald-500 text-white px-6 py-2 rounded-md"
           >
             Continue Shopping
@@ -90,191 +98,204 @@ const Payment = () => {
       </div>
     );
   }
-  
+
   return (
-    <div className="min-h-screen bg-gray-50  py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
 
-        <div className="flex flex-col md:flex-row gap-8">
-          {/* Payment Form */}
-          <div className="md:w-2/3">
-            <div className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-6">Payment Method</h2>
+        <Formik
+          initialValues={{
+            address: selectedAddress || {
+              street: "",
+              city: "",
+              state: "",
+              pin: "",
+              mobile: "",
+            },
+            paymentMethod: "cod",
+            upiId: "",
+          }}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+          enableReinitialize
+        >
+          {({ values, isSubmitting }) => (
+            <Form className="flex flex-col md:flex-row gap-8">
+              {/* Left Column */}
+              <div className="md:w-2/3">
+                {/* Address Section */}
+                <div className="bg-white shadow rounded-lg p-6 mb-6">
+                  <h2 className="text-xl font-semibold mb-6">
+                    Delivery Address
+                  </h2>
 
-              <div className="flex space-x-4 mb-6">
-                <button 
-                  onClick={() => setPaymentMethod('creditCard')}
-                  className={`px-4 py-2 rounded-md ${
-                    paymentMethod === 'creditCard' 
-                      ? 'bg-emerald-700 text-white' 
-                      : 'bg-gray-200 text-gray-700'
-                  }`}
-                >
-                  Credit Card
-                </button>
-                <button 
-                  onClick={() => setPaymentMethod('paypal')}
-                  className={`px-4 py-2 rounded-md ${
-                    paymentMethod === 'paypal' 
-                      ? 'bg-emerald-700 text-white' 
-                      : 'bg-gray-200 text-gray-700'
-                  }`}
-                >
-                  PayPal
-                </button>
-              </div>
+                  {loggedInUser?.address && !showAddressForm ? (
+                    <div>
+                      <div className="border p-4 rounded-md bg-gray-50">
+                        <p>{loggedInUser.address.street}</p>
+                        <p>
+                          {loggedInUser.address.city},{" "}
+                          {loggedInUser.address.state} -{" "}
+                          {loggedInUser.address.pin}
+                        </p>
+                        <p>Mobile: {loggedInUser.address.mobile}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowAddressForm(true)}
+                        className="mt-3 text-emerald-500 text-sm font-medium"
+                      >
+                        Change Address
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {["street", "city", "state", "pin", "mobile"].map(
+                        (field) => (
+                          <div key={field}>
+                            <label className="block text-gray-700 text-sm font-medium mb-2 capitalize">
+                              {field}
+                            </label>
+                            <Field
+                              type="text"
+                              name={`address.${field}`}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                            />
+                            <ErrorMessage
+                              name={`address.${field}`}
+                              component="div"
+                              className="text-red-500 text-sm mt-1"
+                            />
+                          </div>
+                        )
+                      )}
+                    </div>
+                  )}
+                </div>
 
-              {paymentMethod === 'creditCard' ? (
-                <form onSubmit={(e) => e.preventDefault()}>
-                  <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-medium mb-2">
-                      Card Number
+                {/* Payment Section */}
+                <div className="bg-white shadow rounded-lg p-6">
+                  <h2 className="text-xl font-semibold mb-6">
+                    Payment Method
+                  </h2>
+
+                  <div className="flex space-x-4 mb-6">
+                    <label
+                      className={`px-4 py-2 rounded-md cursor-pointer ${
+                        values.paymentMethod === "cod"
+                          ? "bg-emerald-700 text-white"
+                          : "bg-gray-200 text-gray-700"
+                      }`}
+                    >
+                      <Field
+                        type="radio"
+                        name="paymentMethod"
+                        value="cod"
+                        className="hidden"
+                      />
+                      Cash on Delivery
                     </label>
-                    <input
-                      type="text"
-                      name="number"
-                      value={cardDetails.number}
-                      onChange={handleInputChange}
-                      placeholder="1234 5678 9012 3456"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                      required
-                    />
-                  </div>
 
-                  <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-medium mb-2">
-                      Name on Card
+                    <label
+                      className={`px-4 py-2 rounded-md cursor-pointer ${
+                        values.paymentMethod === "upi"
+                          ? "bg-emerald-700 text-white"
+                          : "bg-gray-200 text-gray-700"
+                      }`}
+                    >
+                      <Field
+                        type="radio"
+                        name="paymentMethod"
+                        value="upi"
+                        className="hidden"
+                      />
+                      UPI
                     </label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={cardDetails.name}
-                      onChange={handleInputChange}
-                      placeholder="John Doe"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                      required
-                    />
                   </div>
+                  <ErrorMessage
+                    name="paymentMethod"
+                    component="div"
+                    className="text-red-500 text-sm mb-2"
+                  />
 
-                  <div className="grid grid-cols-2 gap-4 mb-6">
+                  {values.paymentMethod === "upi" && (
                     <div>
                       <label className="block text-gray-700 text-sm font-medium mb-2">
-                        Expiry Date
+                        Enter UPI ID
                       </label>
-                      <input
+                      <Field
                         type="text"
-                        name="expiry"
-                        value={cardDetails.expiry}
-                        onChange={handleInputChange}
-                        placeholder="MM/YY"
+                        name="upiId"
+                        placeholder="example@upi"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                        required
+                      />
+                      <ErrorMessage
+                        name="upiId"
+                        component="div"
+                        className="text-red-500 text-sm mt-1"
                       />
                     </div>
-
-                    <div>
-                      <label className="block text-gray-700 text-sm font-medium mb-2">
-                        CVV
-                      </label>
-                      <input
-                        type="text"
-                        name="cvv"
-                        value={cardDetails.cvv}
-                        onChange={handleInputChange}
-                        placeholder="123"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                        required
-                      />
-                    </div>
-                  </div>
+                  )}
 
                   <button
-                    type="button"
-                    onClick={handlePayment}
-                    disabled={isProcessing}
-                    className={`w-full ${
-                      isProcessing ? 'bg-gray-400' : 'bg-emerald-500 hover:bg-emerald-700'
-                    } text-white font-medium py-3 px-4 rounded-md cursor-pointer`}
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={`mt-6 w-full ${
+                      isSubmitting
+                        ? "bg-gray-400"
+                        : "bg-emerald-500 hover:bg-emerald-700"
+                    } text-white font-medium py-3 px-4 rounded-md`}
                   >
-                    {isProcessing ? 'Processing...' : `Pay $${totalCost.toFixed(2)}`}
-                  </button>
-                </form>
-              ) : (
-                <div className="text-center py-8">
-                  <p className="mb-4">You will be redirected to PayPal to complete your payment.</p>
-                  <button
-                    onClick={handlePayment}
-                    disabled={isProcessing}
-                    className={`w-full ${
-                      isProcessing ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-700'
-                    } text-white font-medium py-3 px-4 rounded-md cursor-pointer`}
-                  >
-                    {isProcessing ? 'Processing...' : 'Continue to PayPal'}
+                    {isSubmitting
+                      ? "Processing..."
+                      : `Place Order $${totalCost.toFixed(2)}`}
                   </button>
                 </div>
-              )}
-            </div>
-          </div>
+              </div>
 
-          {/* Order Summary */}
-          <div className="md:w-1/3">
-            <div className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
+              {/* Order Summary */}
+              <div className="md:w-1/3">
+                <div className="bg-white shadow rounded-lg p-6">
+                  <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
 
-              <div className="space-y-4 mb-6">
-                {cart.map((item) => (
-                  <div key={item.id} className="flex justify-between">
-                    <div>
-                      <p className="font-medium">{item.name}</p>
-                      <p className="text-gray-500 text-sm">
-                        Qty: {item.quantity} | Size: {item.size}
-                      </p>
-                    </div>
-                    <p className="font-medium">
-                      ${(item.price * item.quantity).toFixed(2)}
-                    </p>
+                  <div className="space-y-4 mb-6">
+                    {cart.map((item) => (
+                      <div key={item.id} className="flex justify-between">
+                        <div>
+                          <p className="font-medium">{item.name}</p>
+                          <p className="text-gray-500 text-sm">
+                            Qty: {item.quantity} | Size: {item.size}
+                          </p>
+                        </div>
+                        <p className="font-medium">
+                          ${(item.price * item.quantity).toFixed(2)}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
 
-              <div className="border-t border-gray-200 pt-4 space-y-2">
-                <div className="flex justify-between">
-                  <p className="text-gray-600">Subtotal</p>
-                  <p>${itemCost.toFixed(2)}</p>
-                </div>
+                  <div className="border-t border-gray-200 pt-4 space-y-2">
+                    <div className="flex justify-between">
+                      <p className="text-gray-600">Subtotal</p>
+                      <p>${itemCost.toFixed(2)}</p>
+                    </div>
 
-                <div className="flex justify-between">
-                  <p className="text-gray-600">Tax (10%)</p>
-                  <p>${tax.toFixed(2)}</p>
-                </div>
-                
-                <div className="flex justify-between font-bold text-lg mt-4">
-                  <p>Total</p>
-                  <p>${totalCost.toFixed(2)}</p>
+                    <div className="flex justify-between">
+                      <p className="text-gray-600">Tax (10%)</p>
+                      <p>${tax.toFixed(2)}</p>
+                    </div>
+
+                    <div className="flex justify-between font-bold text-lg mt-4">
+                      <p>Total</p>
+                      <p>${totalCost.toFixed(2)}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            {loggedInUser?.address && (
-              <div className="mt-4 bg-white shadow rounded-lg p-6">
-                <h3 className="font-medium mb-2">Delivery Information</h3>
-                <p className="text-gray-600">{loggedInUser.address.street}</p>
-                <p className="text-gray-600">{loggedInUser.address.city}</p>
-                <p className="text-gray-600">
-                  {loggedInUser.address.state} - {loggedInUser.address.pin}
-                </p>
-                <p className="text-gray-600 mt-2">Mobile: {loggedInUser.address.mobile}</p>
-                <button 
-                  onClick={() => navigate('/profile')}
-                  className="mt-3 text-emerald-500 text-sm font-medium"
-                >
-                  Change address
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
+            </Form>
+          )}
+        </Formik>
       </div>
     </div>
   );

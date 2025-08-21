@@ -7,7 +7,8 @@ import ShoppingPage from "./components/nonAuth/ShoppingPage";
 import Cart from "./components/pages/Cart";
 import ProductDetails from "./components/nonAuth/ProductDetails";
 import Payment from "./components/pages/Payment";
- 
+import Order from "./components/pages/Order";
+import OrderHistory from "./components/pages/OrderHistory";  // ✅ new
 
 const AppRoutes = () => {
   return (
@@ -16,15 +17,11 @@ const AppRoutes = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/shop" element={<ShoppingPage />} />
-
       <Route path="/cart" element={<Cart />} />
       <Route path="/payment" element={<Payment />} />
+      <Route path="/order" element={<Order />} />
+      <Route path="/orders" element={<OrderHistory />} />   {/* ✅ new route */}
       <Route path="/productdetails/:id" element={<ProductDetails />} />
-      
-      
-
-
-      <Route />
     </Routes>
   );
 };
