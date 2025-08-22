@@ -1,26 +1,44 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ProductContext } from "../../context/ProductProvider";
 import { CartContext } from "../../context/CartProvider";
-import { useWishlist } from "../../context/WishListProvider"; // Add this import
-import { motion } from "framer-motion";
+import { useWishlist } from "../../context/WishListProvider";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const products = useContext(ProductContext);
+
+  const { products } = useContext(ProductContext); // Get products array from context
   const { addToCart } = useContext(CartContext);
-  const { toggleWishlist, isInWishlist } = useWishlist(); // Use the context
+  const { toggleWishlist, isInWishlist } = useWishlist();
+
   const [selectedImage, setSelectedImage] = useState(0);
+  const [product, setProduct] = useState(null);
 
-  const product = products.find(p => p.id === id);
+  // When products change, find the product by ID
+  useEffect(() => {
+    if (products.length > 0) {
+      const found = products.find((p) => p.id === id);
+      setProduct(found || null);
+    }
+  }, [products, id]);
 
+  // Loading state while products are being fetched
+  if (!products || products.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-700 text-lg">Loading product...</p>
+      </div>
+    );
+  }
+
+  // Product not found case
   if (!product) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-medium text-gray-800">Product not found</h2>
-          <button 
+          <button
             onClick={() => navigate(-1)}
             className="mt-4 px-4 py-2 bg-gray-900 text-white rounded-lg"
           >
@@ -31,17 +49,14 @@ const ProductDetails = () => {
     );
   }
 
-  const handleAddToCart = () => {
-    addToCart(product);
-  };
+  const handleAddToCart = () => addToCart(product);
 
-  const renderRating = (rating) => {
-    return [...Array(5)].map((_, i) => (
+  const renderRating = (rating) =>
+    [...Array(5)].map((_, i) => (
       <span key={i} className={i < rating ? "text-amber-400" : "text-gray-300"}>
         ★
       </span>
     ));
-  };
 
   const HeartIcon = ({ filled }) => (
     <svg
@@ -50,9 +65,7 @@ const ProductDetails = () => {
       fill={filled ? "currentColor" : "none"}
       stroke="currentColor"
       strokeWidth="1.5"
-      className={`h-6 w-6 ${
-        filled ? "text-rose-500" : "text-gray-400 hover:text-rose-400"
-      }`}
+      className={`h-6 w-6 ${filled ? "text-rose-500" : "text-gray-400 hover:text-rose-400"}`}
     >
       <path
         strokeLinecap="round"
@@ -65,7 +78,8 @@ const ProductDetails = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container mx-auto px-4">
-        <button 
+        {/* Back button */}
+        <button
           onClick={() => navigate(-1)}
           className="mb-6 flex items-center text-gray-600 hover:text-gray-900"
         >
@@ -86,19 +100,11 @@ const ProductDetails = () => {
                   className="w-full h-full object-contain"
                 />
               ) : (
-                <div className="text-gray-300">
-                  <svg className="w-24 h-24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1"
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                </div>
+                <div className="text-gray-300">No Image</div>
               )}
             </div>
-            
+
+            {/* Image thumbnails */}
             {product.images && product.images.length > 1 && (
               <div className="grid grid-cols-4 gap-2">
                 {product.images.map((img, index) => (
@@ -120,17 +126,21 @@ const ProductDetails = () => {
           <div>
             <div className="flex justify-between items-start mb-4">
               <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
-              <button
-                onClick={() => toggleWishlist(product.id)}
-                className="p-2 rounded-full hover:bg-gray-100"
-                aria-label="Add to wishlist"
-              >
+              <button onClick={() => toggleWishlist(product.id)} className="p-2 rounded-full hover:bg-gray-100">
                 <HeartIcon filled={isInWishlist(product.id)} />
               </button>
             </div>
 
-            {/* Rest of the component remains the same */}
-            {/* ... */}
+            <p className="text-gray-700 mb-2">{product.description}</p>
+            <p className="text-xl font-semibold mb-2">${product.price}</p>
+            <div className="mb-4">{renderRating(Math.round(product.rating))}</div>
+
+            <button
+              onClick={handleAddToCart}
+              className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
+            >
+              Add to Cart
+            </button>
           </div>
         </div>
       </div>

@@ -274,13 +274,13 @@ const HomePage = () => {
                         transition={{ duration: 0.3 }}
                         className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 text-white p-4 text-center"
                       >
-                        <motion.button
+                        {/* <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           className="text-sm uppercase tracking-wider"
                         >
                           Quick Add
-                        </motion.button>
+                        </motion.button> */}
                       </motion.div>
                     )}
                   </AnimatePresence>

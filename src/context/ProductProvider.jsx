@@ -1,29 +1,20 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { productAPI } from "../Api";
+import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
-import { AuthContext } from "./AuthProvider";
+import { productAPI } from "../Api";
 
 export const ProductContext = createContext();
 
 const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
-  // const { loggedInUser } = useContext(AuthContext);
-  const[filteredProducts,setFproduct]=useState([]);
-  const [productSearch,setPsearch]=useState('');
-  
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [productSearch, setProductSearch] = useState('');
 
-  //search
-
-  useEffect(()=>{
-    setFproduct(products.filter(product=>product.name.toLowerCase().includes(productSearch.toLowerCase())))
-  },[productSearch])
-
+  // Fetch products
   const fetchProducts = async () => {
     try {
       const { data } = await axios.get(productAPI);
-      setFproduct(data)
       setProducts(data);
-      console.log(products);
+      setFilteredProducts(data);
     } catch (error) {
       console.error(error.message);
     }
@@ -33,17 +24,38 @@ const ProductProvider = ({ children }) => {
     fetchProducts();
   }, []);
 
-  const  filterProduct=(select)=>{
-    if(select=== 'all'){
-      setFproduct(products)
-      return;
+  // Search filtering
+  useEffect(() => {
+    setFilteredProducts(
+      products.filter((product) =>
+        product.name.toLowerCase().includes(productSearch.toLowerCase())
+      )
+    );
+  }, [productSearch, products]);
 
+  // Gender filter
+  const filterProduct = (select) => {
+    if (select === "all") {
+      setFilteredProducts(products);
+      return;
     }
-      setFproduct(products.filter(product=>product.gender.toLowerCase().includes(select.toLowerCase())))
-  }
+    setFilteredProducts(
+      products.filter((product) =>
+        product.gender.toLowerCase().includes(select.toLowerCase())
+      )
+    );
+  };
 
   return (
-    <ProductContext.Provider value={{products,filteredProducts, filterProduct,productSearch,setPsearch}}>
+    <ProductContext.Provider
+      value={{
+        products,
+        filteredProducts,
+        filterProduct,
+        productSearch,
+        setProductSearch,
+      }}
+    >
       {children}
     </ProductContext.Provider>
   );
