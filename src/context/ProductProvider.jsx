@@ -15,7 +15,7 @@ const ProductProvider = ({ children }) => {
     try {
       const { data } = await axios.get(productAPI);
       setProducts(data);
-      setFilteredProducts(data); // initially show all products
+      setFilteredProducts(data);  
     } catch (error) {
       console.error(error.message);
     }

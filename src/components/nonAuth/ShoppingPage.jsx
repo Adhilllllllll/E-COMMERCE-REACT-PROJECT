@@ -66,7 +66,7 @@ const ShoppingPage = () => {
     addToCart(product);
   };
 
-  // ✅ FIX: check against productId not id
+   
   const isInCart = (productId) => {
     return cart.some((item) => item.productId === productId);
   };
@@ -232,7 +232,7 @@ const ShoppingPage = () => {
                       )}
                     </div>
 
-                    {/* ✅ Correct conditional */}
+                    {/*  Correct conditional */}
                     {isInCart(product.id) ? (
                       <button
                         onClick={(e) => {

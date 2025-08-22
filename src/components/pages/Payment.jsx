@@ -7,6 +7,8 @@ import { userApi } from "../../Api";
 import { toast } from "react-toastify";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import Navbar from "./NavBar";
+ 
 
 // ✅ Validation schema
 const validationSchema = Yup.object().shape({
@@ -65,7 +67,7 @@ const Payment = () => {
         ...loggedInUser,
         address: addressToUse,
         orders: [...(loggedInUser.orders || []), order],
-        cart: [], // ✅ clear cart
+        cart: [], //  clear cart
       };
 
       await axios.patch(`${userApi}/${updatedUser.id}`, updatedUser);
@@ -86,6 +88,7 @@ const Payment = () => {
   if (cart.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
+        
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">Your cart is empty</h2>
           <button
@@ -100,7 +103,9 @@ const Payment = () => {
   }
 
   return (
+ 
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+         <Navbar/>
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
 

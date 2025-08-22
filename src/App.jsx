@@ -24,7 +24,7 @@ const Layout = () => {
       <ProductProvider>
         <AppRoutes />
       </ProductProvider>
-      {/* {!shouldHideLayout && <Footer />} */}
+       
     </>
   );
 };
@@ -35,9 +35,9 @@ const App = () => {
     <BrowserRouter>
       <AuthProvider>
         <CartProvider>
-          <WishlistProvider> {/* Add WishlistProvider here */}
+          <WishlistProvider>  
             <Layout />
-            {/* ✅ Toast container globally */}
+            
             <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
           </WishlistProvider>
         </CartProvider>

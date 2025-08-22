@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ProductContext } from "../../context/ProductProvider";
 import { CartContext } from "../../context/CartProvider";
 import { useWishlist } from "../../context/WishListProvider";
+import { toast } from "react-toastify";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -14,6 +15,17 @@ const ProductDetails = () => {
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [product, setProduct] = useState(null);
+
+
+
+  const handleCartClick=(e,product)=>{
+  
+    e.stopPropagation();
+    addToCart(product)
+      toast("added succefulyy")
+
+    
+  }
 
   // When products change, find the product by ID
   useEffect(() => {
@@ -136,7 +148,7 @@ const ProductDetails = () => {
             <div className="mb-4">{renderRating(Math.round(product.rating))}</div>
 
             <button
-              onClick={handleAddToCart}
+              onClick={(e)=>handleCartClick(e,product)}
               className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
             >
               Add to Cart

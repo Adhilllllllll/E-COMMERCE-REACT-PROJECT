@@ -67,7 +67,7 @@ const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         loggedInUser,
-        setLoggedInUser, // ✅ FIX: now available to other components
+        setLoggedInUser,  
         registration,
         login,
         logout,

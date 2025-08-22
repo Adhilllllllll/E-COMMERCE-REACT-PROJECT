@@ -33,7 +33,7 @@ const CartProvider = ({ children }) => {
       const { data } = await axios.get(`${userApi}/${userId}`);
       setCart(data.cart || []);
     } catch (err) {
-      console.error("❌ Error fetching cart:", err);
+      console.error("Error fetching cart:", err);
     }
   };
 
@@ -42,7 +42,7 @@ const CartProvider = ({ children }) => {
       await axios.patch(`${userApi}/${userId}`, { cart: newCart });
       setCart(newCart);
     } catch (err) {
-      console.error("❌ Error updating cart:", err);
+      console.error(" Error updating cart:", err);
     }
   };
 
@@ -53,7 +53,7 @@ const CartProvider = ({ children }) => {
       return;
     }
 
-    // ✅ use productId consistently
+    //  use productId consistently
     const existingItem = cart.find((item) => item.productId === product.id);
     let newCart;
     if (existingItem) {
@@ -102,6 +102,7 @@ const CartProvider = ({ children }) => {
         removeFromCart,
         updateQuantity,
         fetchCart,
+        cartCount: cart.reduce((sum, item) => sum + item.quantity, 0)
       }}
     >
       {children}

@@ -23,8 +23,8 @@ const OrderHistory = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-6">My Orders</h1>
+    <div className="max-w-4xl  mx-auto py-8">
+      <h1 className="text-3xl font-bold mb-6"><br/>My Orders</h1>
       <div className="space-y-6">
         {loggedInUser.orders.map((order) => (
           <div key={order.id} className="p-4 border rounded-md shadow-sm bg-white">

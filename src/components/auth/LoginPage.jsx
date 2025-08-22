@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 export default function LoginPage() {
   const { loggedInUser, login } = useContext(AuthContext);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-  const [checkingAuth, setCheckingAuth] = useState(true); // ✅ new state
+  const [checkingAuth, setCheckingAuth] = useState(true); //  new state
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function LoginPage() {
       return;
     }
 
-    // ✅ Once checks are done, allow rendering
+    //  Once checks are done, allow rendering
     setCheckingAuth(false);
   }, [loggedInUser, navigate]);
 
@@ -37,7 +37,7 @@ export default function LoginPage() {
     console.log("Login attempt:", loginData);
   };
 
-  // ✅ Prevent UI flash while checking auth
+  //  Prevent UI flash while checking auth
   if (checkingAuth) {
     return (
       <div className="flex items-center justify-center h-screen">

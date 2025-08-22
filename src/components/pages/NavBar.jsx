@@ -7,14 +7,19 @@ import LogoutButton from "../LogoutButton";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiShoppingBag, FiHeart } from "react-icons/fi"; // Added FiHeart icon
 import Swal from "sweetalert2";
+import { CartContext } from "../../context/CartProvider";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { loggedInUser, logout } = useContext(AuthContext);
-  const { wishlistCount } = useWishlist(); // Get wishlist count from context
+  const { wishlistCount } = useWishlist();
+  const { cartCount } = useContext(CartContext);
 
-  // ✅ Confirm before logout
+   
+  // const {} // Get wishlist count from context
+
+  //  Confirm before logout
   const handleLogout = () => {
     Swal.fire({
       title: "Are you sure?",
@@ -46,7 +51,7 @@ const Navbar = () => {
 
         {/* DESKTOP MENU */}
         <div className="hidden md:flex space-x-8">
-          {["Home", "Shop", "About"].map((item) => (
+          {["Home", "Shop"].map((item) => (
             <Link
               to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
               key={item}
@@ -75,6 +80,7 @@ const Navbar = () => {
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate("/wishlist")}
             className="relative p-1 text-gray-600 hover:text-rose-500"
+
           >
             <FiHeart className="h-5 w-5" />
             {wishlistCount > 0 && (
@@ -84,17 +90,28 @@ const Navbar = () => {
             )}
           </motion.button>
 
-          {/* CART ICON */}
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => navigate("/cart")}
-            className="p-1 text-gray-600 hover:text-black"
-          >
-            <FiShoppingBag className="h-5 w-5" />
-          </motion.button>
 
-          {/* ✅ Login / Logout */}
+          <motion.button
+  whileHover={{ scale: 1.1 }}
+  whileTap={{ scale: 0.95 }}
+  onClick={() => navigate("/cart")}
+  className="relative p-1 text-gray-600 hover:text-black"
+>
+  {/* Cart Icon */}
+  <FiShoppingBag className="h-5 w-5" />
+
+  {/* Count Badge (always visible if cartCount > 0) */}
+  {cartCount > 0 && (
+    <span
+      className="absolute -top-1 -right-1 bg-black text-white 
+                 text-xs rounded-full h-5 w-5 flex items-center justify-center pointer-events-none"
+    >
+      {cartCount}
+    </span>
+  )}
+</motion.button>
+
+          {/*  Login / Logout */}
           {loggedInUser ? (
             <LogoutButton onClick={handleLogout} />
           ) : (
@@ -135,7 +152,7 @@ const Navbar = () => {
             className="md:hidden overflow-hidden"
           >
             <div className="px-6 py-4 space-y-4">
-              {["Home", "Shop", "About"].map((item) => (
+              {["Home", "Shop",].map((item) => (
                 <motion.a
                   key={item}
                   href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
@@ -155,7 +172,7 @@ const Navbar = () => {
                 Wishlist {wishlistCount > 0 && `(${wishlistCount})`}
               </motion.a>
 
-              {/* ✅ Orders only if logged in */}
+              {/*  Orders only if logged in */}
               {loggedInUser && (
                 <motion.a
                   href="/orders"
@@ -166,7 +183,7 @@ const Navbar = () => {
                 </motion.a>
               )}
 
-              {/* ✅ Login / Logout */}
+              {/*  Login / Logout */}
               {loggedInUser ? (
                 <motion.button
                   onClick={handleLogout}

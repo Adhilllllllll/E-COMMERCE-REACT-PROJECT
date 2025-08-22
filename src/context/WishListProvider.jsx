@@ -25,6 +25,8 @@ export const WishlistProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('wishlist', JSON.stringify(wishlist));
   }, [wishlist]);
+  console.log(wishlist);
+  
 
   const addToWishlist = (productId) => {
     setWishlist(prev => {
