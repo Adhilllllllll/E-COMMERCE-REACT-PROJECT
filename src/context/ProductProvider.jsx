@@ -7,14 +7,15 @@ export const ProductContext = createContext();
 const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [productSearch, setProductSearch] = useState('');
+  const [productSearch, setPsearch] = useState('');
+  const [selectGender, setSelectGender] = useState('all');
 
   // Fetch products
   const fetchProducts = async () => {
     try {
       const { data } = await axios.get(productAPI);
       setProducts(data);
-      setFilteredProducts(data);
+      setFilteredProducts(data); // initially show all products
     } catch (error) {
       console.error(error.message);
     }
@@ -24,38 +25,35 @@ const ProductProvider = ({ children }) => {
     fetchProducts();
   }, []);
 
-  // Search filtering
+  // Filter products based on gender and search
   useEffect(() => {
-    setFilteredProducts(
-      products.filter((product) =>
-        product.name.toLowerCase().includes(productSearch.toLowerCase())
-      )
-    );
-  }, [productSearch, products]);
+    let temp = [...products];
 
-  // Gender filter
-  const filterProduct = (select) => {
-    if (select === "all") {
-      setFilteredProducts(products);
-      return;
+    if (selectGender !== 'all') {
+      temp = temp.filter(p => p.gender.toLowerCase() === selectGender.toLowerCase());
     }
-    setFilteredProducts(
-      products.filter((product) =>
-        product.gender.toLowerCase().includes(select.toLowerCase())
-      )
-    );
+
+    if (productSearch) {
+      temp = temp.filter(p =>
+        p.name.toLowerCase().includes(productSearch.toLowerCase())
+      );
+    }
+
+    setFilteredProducts(temp);
+  }, [products, productSearch, selectGender]);
+
+  const filterProduct = (gender) => {
+    setSelectGender(gender);
   };
 
   return (
-    <ProductContext.Provider
-      value={{
-        products,
-        filteredProducts,
-        filterProduct,
-        productSearch,
-        setProductSearch,
-      }}
-    >
+    <ProductContext.Provider value={{
+      products,
+      filteredProducts,
+      filterProduct,
+      productSearch,
+      setPsearch
+    }}>
       {children}
     </ProductContext.Provider>
   );
