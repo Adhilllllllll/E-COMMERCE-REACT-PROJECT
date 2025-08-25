@@ -345,6 +345,27 @@
     }
   ],
   "user": [
+      {
+    "id": "a1d2",
+    "name": "superadmin",
+    "email": "admin@gmail.com",
+    "password": "admin123",
+    "role": "admin",
+    "address": {
+      "mobile": "9876543210",
+      "street": "Admin Street",
+      "city": "Kochi",
+      "state": "Kerala",
+      "pin": "682001"
+    },
+    "isBlock": false,
+    "isDelete": false,
+    "cart": [],
+    "orders": [],
+    "wishlist": [],
+    "orderHistory": [],
+    "created_at": "2025-08-16T04:10:00.000Z"
+  },
     {
       "id": "8ebb",
       "name": "leooo",
@@ -452,8 +473,48 @@
           "price": 95,
           "image": "/productimage/output.jpg",
           "size": "50ml",
-          "quantity": 6,
+          "quantity": 7,
           "id": 1755854343388
+        },
+        {
+          "productId": "24",
+          "name": "Alien",
+          "brand": "Mugler",
+          "price": 125,
+          "image": "/productimage/gueri prem.jpg",
+          "size": "50ml",
+          "quantity": 1,
+          "id": 1755861481946
+        },
+        {
+          "productId": "23",
+          "name": "Boss Bottled",
+          "brand": "Hugo Boss",
+          "price": 75,
+          "image": "/productimage/output (1).jpg",
+          "size": "50ml",
+          "quantity": 1,
+          "id": 1755861483503
+        },
+        {
+          "productId": "26",
+          "name": "Si",
+          "brand": "Giorgio Armani",
+          "price": 135,
+          "image": "https://images.unsplash.com/photo-1566977776052-6e61e35bf9be?w=294&dpr=2&h=294&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXRodW1ibmFpbHx8NDU0NzE4Nnx8ZW58MHx8fHx8",
+          "size": "50ml",
+          "quantity": 1,
+          "id": 1755867043221
+        },
+        {
+          "productId": "21",
+          "name": "The One",
+          "brand": "Dolce & Gabbana",
+          "price": 105,
+          "image": "/productimage/foog1.jpg",
+          "size": "50ml",
+          "quantity": 1,
+          "id": 1755867063260
         }
       ],
       "orders": [

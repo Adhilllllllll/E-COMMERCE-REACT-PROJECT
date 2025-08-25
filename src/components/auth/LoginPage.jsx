@@ -8,23 +8,30 @@ export default function LoginPage() {
   const [checkingAuth, setCheckingAuth] = useState(true); //  new state
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check if already logged in via context
-    if (loggedInUser) {
+ useEffect(() => {
+  if (loggedInUser) {
+    if (loggedInUser.role?.toLowerCase().trim() === "admin") {
+      navigate("/admin", { replace: true });
+    } else {
       navigate("/", { replace: true });
-      return;
     }
+    return;
+  }
 
-    // Check localStorage (in case of refresh)
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
+  // Check localStorage (in case of refresh)
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {
+    const parsedUser = JSON.parse(storedUser);
+    if (parsedUser.role?.toLowerCase().trim() === "admin") {
+      navigate("/admin", { replace: true });
+    } else {
       navigate("/", { replace: true });
-      return;
     }
+    return;
+  }
 
-    //  Once checks are done, allow rendering
-    setCheckingAuth(false);
-  }, [loggedInUser, navigate]);
+  setCheckingAuth(false);
+}, [loggedInUser, navigate]);
 
   // handle form input
   const handleChange = (event) => {
