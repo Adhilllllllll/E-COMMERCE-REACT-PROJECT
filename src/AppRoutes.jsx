@@ -17,8 +17,8 @@ import ProductManagement from "./admin/pages/ProductManagement";
 import UserManagement from "./admin/pages/UserManagement";
 import OrderManagement from "./admin/pages/OrderManagement";
 
-// ✅ NEW
 import CustomerLayout from "./components/CustomerLayout";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AppRoutes = () => {
   return (
@@ -27,24 +27,30 @@ const AppRoutes = () => {
       <Route path="/" element={<CustomerLayout />}>
         <Route index element={<HomePage />} />
         <Route path="shop" element={<ShoppingPage />} />
-        <Route path="cart" element={<Cart />} />
-        <Route path="payment" element={<Payment />} />
-        <Route path="order" element={<Order />} />
-        <Route path="orders" element={<OrderHistory />} />
-        <Route path="wishlist" element={<Wishlist />} />
         <Route path="productdetails/:id" element={<ProductDetails />} />
+
+        {/* Customer Protected Routes */}
+        <Route element={<ProtectedRoute allowedRoles={["customer"]} />}>
+          <Route path="cart" element={<Cart />} />
+          <Route path="payment" element={<Payment />} />
+          <Route path="order" element={<Order />} />
+          <Route path="orders" element={<OrderHistory />} />
+          <Route path="wishlist" element={<Wishlist />} />
+        </Route>
       </Route>
 
       {/* Auth Routes (outside layout) */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
-      {/* Admin Layout with Nested Routes */}
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="products" element={<ProductManagement />} />
-        <Route path="users" element={<UserManagement />} />
-        <Route path="orders" element={<OrderManagement />} />
+      {/* Admin Layout with Protected Routes */}
+      <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="products" element={<ProductManagement />} />
+          <Route path="users" element={<UserManagement />} />
+          <Route path="orders" element={<OrderManagement />} />
+        </Route>
       </Route>
 
       {/* Fallback */}

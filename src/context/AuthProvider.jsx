@@ -23,10 +23,10 @@ const AuthProvider = ({ children }) => {
     }
   }, [loggedInUser]);
 
-  // Register new user
+  // Register new user (default role = customer)
   const registration = async (formData) => {
     try {
-      await axios.post(userApi, formData);
+      await axios.post(userApi, { ...formData, role: "customer" });
       navigate("/login");
       toast.success("Registration successful! Please login.");
     } catch (error) {
@@ -46,7 +46,11 @@ const AuthProvider = ({ children }) => {
       if (user) {
         setLoggedInUser(user);
         toast.success("🎉 Successfully Logged in!");
-        navigate("/");
+        if (user.role === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
       } else {
         toast.error("😥 Sorry... User not found!");
       }
@@ -67,7 +71,7 @@ const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         loggedInUser,
-        setLoggedInUser,  
+        setLoggedInUser,
         registration,
         login,
         logout,
