@@ -479,8 +479,6 @@ const HomePage = () => {
           </motion.form>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };

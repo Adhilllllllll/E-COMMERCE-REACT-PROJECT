@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState,useContext } from "react";
+import { AuthContext } from "../../context/AuthProvider";
 import { Outlet, useNavigate } from "react-router-dom";
 import {
   FiHome,
@@ -14,6 +15,7 @@ import {
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   return (
@@ -72,7 +74,10 @@ const AdminLayout = () => {
               </button>
             </li>
             <li className="mb-2">
-              <button className="w-full flex items-center p-2 rounded hover:bg-blue-800 transition-colors duration-200">
+              <button
+                onClick={logout}
+                className="w-full flex items-center p-2 rounded hover:bg-blue-800 transition-colors duration-200"
+              >
                 <FiLogOut className="mr-3" />
                 <span>Logout</span>
               </button>
@@ -106,10 +111,12 @@ const AdminLayout = () => {
                   ></path>
                 </svg>
               </button>
-              <h1 className="text-xl font-semibold text-gray-800">Admin Panel</h1>
+              <h1 className="text-xl font-semibold text-gray-800">
+                Admin Panel
+              </h1>
             </div>
             <div className="flex items-center">
-              <div className="relative mr-4 hidden md:block">
+              {/* <div className="relative mr-4 hidden md:block">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <FiSearch className="text-gray-400" />
                 </div>
@@ -118,7 +125,7 @@ const AdminLayout = () => {
                   className="pl-10 pr-4 py-2 w-64 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Search..."
                 />
-              </div>
+              </div> */}
               <button className="p-2 mr-4 text-gray-600 hover:text-gray-900 relative">
                 <FiBell />
                 <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
@@ -140,7 +147,8 @@ const AdminLayout = () => {
 
         {/* Nested Page Content */}
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
-          <Outlet /> {/* This is where Dashboard, ProductManagement, etc. will render */}
+          <Outlet />{" "}
+          {/* This is where Dashboard, ProductManagement, etc. will render */}
         </main>
       </div>
     </div>

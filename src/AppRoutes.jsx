@@ -17,20 +17,27 @@ import ProductManagement from "./admin/pages/ProductManagement";
 import UserManagement from "./admin/pages/UserManagement";
 import OrderManagement from "./admin/pages/OrderManagement";
 
+// ✅ NEW
+import CustomerLayout from "./components/CustomerLayout";
+
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<HomePage />} />
+      {/* Customer Layout with Nested Routes */}
+      <Route path="/" element={<CustomerLayout />}>
+        <Route index element={<HomePage />} />
+        <Route path="shop" element={<ShoppingPage />} />
+        <Route path="cart" element={<Cart />} />
+        <Route path="payment" element={<Payment />} />
+        <Route path="order" element={<Order />} />
+        <Route path="orders" element={<OrderHistory />} />
+        <Route path="wishlist" element={<Wishlist />} />
+        <Route path="productdetails/:id" element={<ProductDetails />} />
+      </Route>
+
+      {/* Auth Routes (outside layout) */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/shop" element={<ShoppingPage />} />
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/payment" element={<Payment />} />
-      <Route path="/order" element={<Order />} />
-      <Route path="/orders" element={<OrderHistory />} />
-      <Route path="/wishlist" element={<Wishlist />} />
-      <Route path="/productdetails/:id" element={<ProductDetails />} />
 
       {/* Admin Layout with Nested Routes */}
       <Route path="/admin" element={<AdminLayout />}>

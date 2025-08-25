@@ -1,49 +1,31 @@
 import React from "react";
-import { BrowserRouter, useLocation } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./AppRoutes";
 import AuthProvider from "./context/AuthProvider";
 import ProductProvider from "./context/ProductProvider";
-import Navbar from "./components/pages/NavBar";
-import Footer from "./components/pages/Footer";
 import CartProvider from "./context/CartProvider";
-import WishlistProvider from "./context/WishListProvider"; // Fixed casing to match file name
+import WishlistProvider from "./context/WishListProvider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Layout = () => {
-  const location = useLocation();
-
-  // Routes where Navbar & Footer should be hidden
-  const hideLayoutRoutes = ["/productmanage",'/admin',"/login", "/register", "/payment"];
-
-  const shouldHideLayout = hideLayoutRoutes.includes(location.pathname);
-
-  return (
-    <>
-      {!shouldHideLayout && <Navbar />}
-      <ProductProvider>
-        <AppRoutes />
-      </ProductProvider>
-       
-    </>
-  );
-};
-
 const App = () => {
   return (
-
     <BrowserRouter>
       <AuthProvider>
         <CartProvider>
-          <WishlistProvider>  
-            <Layout />
-            
-            <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
+          <WishlistProvider>
+            <ProductProvider>
+              <AppRoutes />
+              <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar
+              />
+            </ProductProvider>
           </WishlistProvider>
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>
-
   );
 };
 
