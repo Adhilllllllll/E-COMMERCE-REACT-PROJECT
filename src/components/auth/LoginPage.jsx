@@ -7,7 +7,7 @@ export default function LoginPage() {
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [checkingAuth, setCheckingAuth] = useState(true); //  new state
   const navigate = useNavigate();
-
+  
  useEffect(() => {
   if (loggedInUser) {
     if (loggedInUser.role?.toLowerCase().trim() === "admin") {
