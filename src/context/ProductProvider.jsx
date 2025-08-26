@@ -9,6 +9,7 @@ const ProductProvider = ({ children }) => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [productSearch, setPsearch] = useState('');
   const [selectGender, setSelectGender] = useState('all');
+  
 
   // Fetch products
   const fetchProducts = async () => {
@@ -46,13 +47,36 @@ const ProductProvider = ({ children }) => {
     setSelectGender(gender);
   };
 
+  //add new product(admin)
+
+  const addProduct=(newProdcut)=>{
+    setProducts(prev=>[...prev,{...newProdcut,id:Date.now().toString() }]);
+  };
+
+  //edit product(admin)
+
+  const editProduct=(id,updatedProduct)=>{
+    setProducts(prev=>prev.map(p=>(p.id===id?{...p,...updatedProduct}:p)));
+  };
+
+  //delete product (admin)
+
+  const deleteProduct=(id)=>{
+setProducts(prev=>prev.filter(p=>p.id !==id));
+  }
+
+
+
   return (
     <ProductContext.Provider value={{
       products,
       filteredProducts,
       filterProduct,
       productSearch,
-      setPsearch
+      setPsearch,
+      addProduct,
+      editProduct,
+      deleteProduct
     }}>
       {children}
     </ProductContext.Provider>
