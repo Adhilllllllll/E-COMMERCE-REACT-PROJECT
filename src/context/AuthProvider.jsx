@@ -23,10 +23,10 @@ const AuthProvider = ({ children }) => {
     }
   }, [loggedInUser]);
 
-  // Register new user (default role = customer)
+  // Register new user (default role = customer, default isBlock = false)
   const registration = async (formData) => {
     try {
-      await axios.post(userApi, { ...formData, role: "customer" });
+      await axios.post(userApi, { ...formData, role: "customer", isBlock: false });
       navigate("/login");
       toast.success("Registration successful! Please login.");
     } catch (error) {
@@ -43,16 +43,25 @@ const AuthProvider = ({ children }) => {
         (u) => u.email === email && u.password === password
       );
 
-      if (user) {
-        setLoggedInUser(user);
-        toast.success("🎉 Successfully Logged in!");
-        if (user.role === "admin") {
-          navigate("/admin");
-        } else {
-          navigate("/");
-        }
-      } else {
+      if (!user) {
         toast.error("😥 Sorry... User not found!");
+        return;
+      }
+
+      // Check if user is blocked
+      if (user.isBlock) {
+        toast.error("🚫 Your account has been blocked. Please contact support.");
+        return;
+      }
+
+      // Successful login
+      setLoggedInUser(user);
+      toast.success("🎉 Successfully Logged in!");
+
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
       }
     } catch (error) {
       console.error("Login error:", error.message);
