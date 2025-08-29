@@ -12,6 +12,10 @@ const Wishlist = () => {
   const { addToCart } = useContext(CartContext);
   const navigate = useNavigate();
 
+  //  const wishlistProducts = (products || []).filter((p) =>
+  //   wishlist.includes(p.id)
+  // );
+
   const wishlistProducts = products.filter(product => wishlist.includes(product.id));
 
   const handleAddToCart = (product) => {
@@ -166,3 +170,58 @@ const Wishlist = () => {
 };
 
 export default Wishlist;
+
+
+
+// import React, { useContext } from "react";
+// import { WishlistContext } from "../../context/WishListProvider";
+// import { ProductContext } from "../../context/ProductProvider";
+
+// const Wishlist = () => {
+//   const { wishlist, removeFromWishlist } = useContext(WishlistContext);
+//   const { products } = useContext(ProductContext);
+
+  // ✅ Prevent crash if products not loaded yet
+  // const wishlistProducts = (products || []).filter((p) =>
+  //   wishlist.includes(p.id)
+  // );
+
+//   if (!wishlistProducts.length) {
+//     return (
+//       <div className="min-h-screen flex items-center justify-center">
+//         <h2 className="text-2xl font-bold">Your Wishlist is empty</h2>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="min-h-screen p-6">
+//       <h2 className="text-2xl font-bold mb-4">Your Wishlist</h2>
+//       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+//         {wishlistProducts.map((product) => (
+//           <div
+//             key={product.id}
+//             className="p-4 border rounded-md shadow-md flex flex-col items-center"
+//           >
+//             <img
+//               src={product.images?.[0]}
+//               alt={product.name}
+//               className="w-32 h-32 object-cover mb-2"
+//             />
+//             <h3 className="text-lg font-semibold">{product.name}</h3>
+//             <p className="text-gray-500">{product.brand}</p>
+//             <p className="font-bold">₹{product.price}</p>
+//             <button
+//               onClick={() => removeFromWishlist(product.id)}
+//               className="mt-2 bg-red-500 text-white px-4 py-2 rounded-md"
+//             >
+//               Remove
+//             </button>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Wishlist;

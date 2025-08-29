@@ -1,12 +1,16 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import { OrderContext } from "../../context/OrderProvider";
 
 const OrderHistory = () => {
   const { loggedInUser } = useContext(AuthContext);
+  // const { orders } = useContext(OrderContext);
   const navigate = useNavigate();
 
   if (!loggedInUser?.orders || loggedInUser.orders.length === 0) {
+   
+
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -29,7 +33,7 @@ const OrderHistory = () => {
         {loggedInUser.orders.map((order) => (
           <div key={order.id} className="p-4 border rounded-md shadow-sm bg-white">
             <p><strong>Order ID:</strong> {order.id}</p>
-            <p><strong>Date:</strong> {new Date(order.date).toLocaleString()}</p>
+            <p><strong>Date:</strong> {new Date(order.createdAt).toLocaleString()}</p>
             <p><strong>Status:</strong> {order.status}</p>
             <p><strong>Total:</strong> ${order.total.toFixed(2)}</p>
             <button

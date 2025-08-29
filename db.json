@@ -2,7 +2,7 @@
   "products": [
     {
       "id": "1",
-      "name": "Bleu de Chanel",
+      "name": "Bleu de",
       "brand": "Chanel",
       "category": "Indoor",
       "gender": "Men",
@@ -312,8 +312,9 @@
         "/productimage/gueri prem.jpg",
         "https://images.unsplash.com/photo-1615634262411-2b5906c57e1d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bXVnbGVyJTIwYWxpZW58ZW58MHx8MHx8fDA%3D"
       ],
-      "stock": 20,
-      "description": "Mysterious floral woody fragrance with jasmine and cashmeran."
+      "stock": 0,
+      "description": "Mysterious floral woody fragrance with jasmine and cashmeran.",
+      "status": "Inactive"
     },
     {
       "id": "25",
@@ -331,7 +332,7 @@
     },
     {
       "id": "26",
-      "name": "Si",
+      "name": "Sio",
       "brand": "Giorgio Armani",
       "category": "Indoor",
       "gender": "Women",
@@ -342,6 +343,30 @@
       ],
       "stock": 30,
       "description": "Modern chypre fragrance with cassis, rose, and woody notes."
+    },
+    {
+      "id": "1b47",
+      "name": "ASDFSADF",
+      "category": "DSF2",
+      "price": "213",
+      "stock": "12",
+      "status": "Active"
+    },
+    {
+      "id": "1fdf",
+      "name": "SDF",
+      "category": "ASF",
+      "price": "123",
+      "stock": "21",
+      "status": "Active"
+    },
+    {
+      "id": "da71",
+      "name": "aaaaaaaaaaaaaaaaaaasdfghjsdd",
+      "category": "svvdf",
+      "price": 12,
+      "stock": 10,
+      "status": "Active"
     }
   ],
   "user": [
@@ -360,32 +385,84 @@
       },
       "isBlock": false,
       "isDelete": false,
-      "cart": [],
+      "cart": [
+        {
+          "productId": "5241",
+          "name": "aaaaaaaaaaaaaaa",
+          "price": 12,
+          "size": "50ml",
+          "quantity": 5,
+          "id": 1756467311161
+        },
+        {
+          "productId": "26",
+          "name": "Sio",
+          "brand": "Giorgio Armani",
+          "price": 135,
+          "image": "https://images.unsplash.com/photo-1566977776052-6e61e35bf9be?w=294&dpr=2&h=294&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXRodW1ibmFpbHx8NDU0NzE4Nnx8ZW58MHx8fHx8",
+          "size": "50ml",
+          "quantity": 2,
+          "id": 1756467314942
+        },
+        {
+          "productId": "23",
+          "name": "Boss Bottled",
+          "brand": "Hugo Boss",
+          "price": 75,
+          "image": "/productimage/output (1).jpg",
+          "size": "50ml",
+          "quantity": 1,
+          "id": 1756467363431
+        },
+        {
+          "productId": "1fdf",
+          "name": "SDF",
+          "price": "123",
+          "size": "50ml",
+          "quantity": 2,
+          "id": 1756470999603
+        },
+        {
+          "productId": "25",
+          "name": "Invictus",
+          "brand": "Paco Rabanne",
+          "price": 95,
+          "image": "/productimage/output.jpg",
+          "size": "50ml",
+          "quantity": 1,
+          "id": 1756471036227
+        },
+        {
+          "productId": "da71",
+          "name": "aaaaaaaaaaaaaaaaaaasdfghjsdd",
+          "price": 12,
+          "size": "50ml",
+          "quantity": 1,
+          "id": 1756471177628
+        },
+        {
+          "productId": "1b47",
+          "name": "ASDFSADF",
+          "price": "213",
+          "size": "50ml",
+          "quantity": 1,
+          "id": 1756472769778
+        },
+        {
+          "productId": "24",
+          "name": "Alien",
+          "brand": "Mugler",
+          "price": 125,
+          "image": "/productimage/gueri prem.jpg",
+          "size": "50ml",
+          "quantity": 1,
+          "id": 1756474970722
+        }
+      ],
       "orders": [],
       "wishlist": [],
       "orderHistory": [],
       "created_at": "2025-08-16T04:10:00.000Z"
-    },
-    {
-      "id": "8ebb",
-      "name": "leooo",
-      "email": "adhilbca1@gmail.com",
-      "password": "12345",
-      "role": "customer",
-      "address": {
-        "mobile": "",
-        "street": "",
-        "city": "",
-        "state": "",
-        "pin": ""
-      },
-      "isBlock": false,
-      "isDelete": false,
-      "cart": [],
-      "orders": [],
-      "wishlist": [],
-      "orderHistory": [],
-      "created_at": "2025-08-16T03:59:23.962Z"
     },
     {
       "id": "a0e7",
@@ -473,103 +550,29 @@
           "price": 95,
           "image": "/productimage/output.jpg",
           "size": "50ml",
-          "quantity": 7,
+          "quantity": 2,
           "id": 1755854343388
         },
         {
-          "productId": "24",
-          "name": "Alien",
-          "brand": "Mugler",
-          "price": 125,
-          "image": "/productimage/gueri prem.jpg",
-          "size": "50ml",
-          "quantity": 1,
-          "id": 1755861481946
-        },
-        {
-          "productId": "23",
-          "name": "Boss Bottled",
-          "brand": "Hugo Boss",
-          "price": 75,
-          "image": "/productimage/output (1).jpg",
-          "size": "50ml",
-          "quantity": 1,
-          "id": 1755861483503
-        },
-        {
-          "productId": "26",
-          "name": "Si",
-          "brand": "Giorgio Armani",
+          "productId": "10",
+          "name": "La Vie Est Belle",
+          "brand": "Lancôme",
           "price": 135,
-          "image": "https://images.unsplash.com/photo-1566977776052-6e61e35bf9be?w=294&dpr=2&h=294&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXRodW1ibmFpbHx8NDU0NzE4Nnx8ZW58MHx8fHx8",
+          "image": "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bGFuY29tZSUyMGxhJTIwdmllJTIwZXN0JTIwYmVsbGV8ZW58MHx8MHx8fDA%3D",
           "size": "50ml",
           "quantity": 1,
-          "id": 1755867043221
+          "id": 1756296093175
         },
         {
-          "productId": "21",
-          "name": "The One",
-          "brand": "Dolce & Gabbana",
-          "price": 105,
-          "image": "/productimage/foog1.jpg",
+          "productId": "da71",
+          "name": "aaaaaaaaaaaaaaaaaaasdfghjsdd",
+          "price": 12,
           "size": "50ml",
           "quantity": 1,
-          "id": 1755867063260
+          "id": 1756475108756
         }
       ],
       "orders": [
-        {
-          "id": "1755766101223",
-          "date": "2025-08-21T08:48:21.223Z",
-          "items": [
-            {
-              "productId": "2",
-              "name": "Oud Satin Mood",
-              "brand": "davidoff",
-              "price": 250,
-              "image": "https://images.unsplash.com/photo-1588619872756-bb955fe22dc2?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8",
-              "size": "50ml",
-              "quantity": 1,
-              "id": 1755766070836
-            }
-          ],
-          "total": 275,
-          "status": "processing",
-          "shippingAddress": {
-            "mobile": "4444444444",
-            "street": "adfs",
-            "city": "ad",
-            "state": "das",
-            "pin": "222222"
-          },
-          "paymentMethod": "cod"
-        },
-        {
-          "id": "1755767672271",
-          "date": "2025-08-21T09:14:32.271Z",
-          "items": [
-            {
-              "productId": "2",
-              "name": "Oud Satin Mood",
-              "brand": "davidoff",
-              "price": 250,
-              "image": "https://images.unsplash.com/photo-1588619872756-bb955fe22dc2?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8",
-              "size": "50ml",
-              "quantity": 1,
-              "id": 1755767495209
-            }
-          ],
-          "total": 275,
-          "status": "processing",
-          "shippingAddress": {
-            "mobile": "4444444444",
-            "street": "adfs",
-            "city": "ad",
-            "state": "das",
-            "pin": "222222"
-          },
-          "paymentMethod": "cod"
-        },
         {
           "id": "1755768282763",
           "date": "2025-08-21T09:24:42.763Z",
@@ -818,6 +821,59 @@
             "pin": "222222"
           },
           "paymentMethod": "cod"
+        },
+        {
+          "id": "1755766101223",
+          "date": "2025-08-21T08:48:21.223Z",
+          "items": [
+            {
+              "productId": "2",
+              "name": "Oud Satin Mood",
+              "brand": "davidoff",
+              "price": 250,
+              "image": "https://images.unsplash.com/photo-1588619872756-bb955fe22dc2?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8",
+              "size": "50ml",
+              "quantity": 1,
+              "id": 1755766070836
+            }
+          ],
+          "total": 275,
+          "status": "Delivered",
+          "shippingAddress": {
+            "mobile": "4444444444",
+            "street": "adfs",
+            "city": "ad",
+            "state": "das",
+            "pin": "222222"
+          },
+          "paymentMethod": "cod"
+        },
+        null,
+        {
+          "id": "1755767672271",
+          "date": "2025-08-21T09:14:32.271Z",
+          "items": [
+            {
+              "productId": "2",
+              "name": "Oud Satin Mood",
+              "brand": "davidoff",
+              "price": 250,
+              "image": "https://images.unsplash.com/photo-1588619872756-bb955fe22dc2?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8",
+              "size": "50ml",
+              "quantity": 1,
+              "id": 1755767495209
+            }
+          ],
+          "total": 275,
+          "status": "Delivered",
+          "shippingAddress": {
+            "mobile": "4444444444",
+            "street": "adfs",
+            "city": "ad",
+            "state": "das",
+            "pin": "222222"
+          },
+          "paymentMethod": "cod"
         }
       ],
       "created_at": "2025-08-18T10:22:34.330Z"
@@ -856,7 +912,7 @@
         "state": "xzxcxzc",
         "pin": "222222"
       },
-      "isBlock": false,
+      "isBlock": true,
       "isDelete": false,
       "cart": [
         {

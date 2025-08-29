@@ -1,13 +1,9 @@
 //  import React, { useContext } from 'react'
 // import { ProductContext } from '../../context/ProductProvider';
- 
+
 //  const ProductManagement = () => {
 
-
 //  const {products,addProduct,editProduct,deleteProduct}=useContext(ProductContext);
-
-
-
 
 //   return (
 //     <div className="bg-white rounded-lg shadow p-6">
@@ -17,7 +13,7 @@
 //           Add New Product
 //         </button>
 //       </div>
-      
+
 //       <div className="overflow-x-auto">
 //         <table className="min-w-full divide-y divide-gray-200">
 //           <thead>
@@ -39,8 +35,8 @@
 //                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{product.stock}</td>
 //                 <td className="px-4 py-3 whitespace-nowrap">
 //                   <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-//                     product.status === 'Active' ? 'bg-green-100 text-green-800' : 
-//                     product.status === 'Low Stock' ? 'bg-yellow-100 text-yellow-800' : 
+//                     product.status === 'Active' ? 'bg-green-100 text-green-800' :
+//                     product.status === 'Low Stock' ? 'bg-yellow-100 text-yellow-800' :
 //                     'bg-red-100 text-red-800'
 //                   }`}>
 //                     {product.status}
@@ -59,10 +55,7 @@
 //   );
 // };
 
- 
- 
 //  export default ProductManagement
-
 
 import React, { useContext, useState } from "react";
 import { ProductContext } from "../../context/ProductProvider";
@@ -77,7 +70,8 @@ const defaultForm = {
 };
 
 const ProductManagement = () => {
-  const { products, addProduct, editProduct, deleteProduct } = useContext(ProductContext);
+  const { products, addProduct, editProduct, deleteProduct } =
+    useContext(ProductContext);
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [formData, setFormData] = useState(defaultForm);
@@ -88,11 +82,21 @@ const ProductManagement = () => {
     setShowForm(true);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    editingProduct ? editProduct(editingProduct.id, formData) : addProduct(formData);
-    setShowForm(false);
+ const handleSubmit = (e) => {
+  e.preventDefault();
+
+  const normalizedData = {
+    ...formData,
+    price: Number(formData.price),
+    stock: Number(formData.stock),
   };
+
+  editingProduct
+    ? editProduct(editingProduct.id, normalizedData)
+    : addProduct(normalizedData);
+
+  setShowForm(false);
+};
 
   const formFields = [
     { name: "name", type: "text", placeholder: "Name" },
@@ -104,7 +108,9 @@ const ProductManagement = () => {
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold text-gray-800">Product Management</h2>
+        <h2 className="text-lg font-semibold text-gray-800">
+          Product Management
+        </h2>
         <button
           onClick={() => openForm()}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg mt-4 md:mt-0"
@@ -147,30 +153,37 @@ const ProductManagement = () => {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <button onClick={() => openForm(p)} className="text-blue-600 hover:text-blue-900 mr-3">
+                  <button
+                    onClick={() => openForm(p)}
+                    className="text-blue-600 hover:text-blue-900 mr-3"
+                  >
                     Edit
                   </button>
-                <button
-  onClick={() => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won’t be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteProduct(p.id);
-        Swal.fire("Deleted!", "Product has been deleted.", "success");
-      }
-    });
-  }}
-  className="text-red-600 hover:text-red-900"
->
-  Delete
-</button>
+                  <button
+                    onClick={() => {
+                      Swal.fire({
+                        title: "Are you sure?",
+                        text: "You won’t be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, delete it!",
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          deleteProduct(p.id);
+                          Swal.fire(
+                            "Deleted!",
+                            "Product has been deleted.",
+                            "success"
+                          );
+                        }
+                      });
+                    }}
+                    className="text-red-600 hover:text-red-900"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
@@ -192,14 +205,18 @@ const ProductManagement = () => {
                   type={type}
                   placeholder={placeholder}
                   value={formData[name]}
-                  onChange={(e) => setFormData({ ...formData, [name]: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, [name]: e.target.value })
+                  }
                   className="w-full border px-3 py-2 rounded"
                   required
                 />
               ))}
               <select
                 value={formData.status}
-                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, status: e.target.value })
+                }
                 className="w-full border px-3 py-2 rounded"
               >
                 {["Active", "Low Stock", "Inactive"].map((s) => (
@@ -209,10 +226,17 @@ const ProductManagement = () => {
                 ))}
               </select>
               <div className="flex justify-end space-x-3">
-                <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 bg-gray-300 rounded">
+                <button
+                  type="button"
+                  onClick={() => setShowForm(false)}
+                  className="px-4 py-2 bg-gray-300 rounded"
+                >
                   Cancel
                 </button>
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-600 text-white rounded"
+                >
                   {editingProduct ? "Update" : "Add"}
                 </button>
               </div>

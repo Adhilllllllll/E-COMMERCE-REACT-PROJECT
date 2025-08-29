@@ -8,26 +8,29 @@ import WishlistProvider from "./context/WishListProvider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserProvider from "./context/UserProvider";
+import OrderProvider from "./context/OrderProvider";
 
 const App = () => {
   return (
     <BrowserRouter>
-      <UserProvider>
-        <AuthProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <ProductProvider>
-                <AppRoutes />
-                <ToastContainer
-                  position="top-right"
-                  autoClose={2000}
-                  hideProgressBar
-                />
-              </ProductProvider>
-            </WishlistProvider>
-          </CartProvider>
-        </AuthProvider>
-      </UserProvider>
+      <AuthProvider>
+        <CartProvider>
+          <OrderProvider>
+            <UserProvider>
+              <WishlistProvider>
+                <ProductProvider>
+                  <AppRoutes />
+                  <ToastContainer
+                    position="top-right"
+                    autoClose={2000}
+                    hideProgressBar
+                  />
+                </ProductProvider>
+              </WishlistProvider>
+            </UserProvider>
+          </OrderProvider>
+        </CartProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 };

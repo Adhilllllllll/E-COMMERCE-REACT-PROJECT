@@ -7,45 +7,40 @@ import { WishlistContext } from "../../context/WishListProvider";
 import Swal from "sweetalert2";
 
 const ShoppingPage = () => {
-  const {
-     
-    filteredProducts,
-    filterProduct,
-    productSearch,
-    setPsearch,
-  } = useContext(ProductContext);
+  const { filteredProducts, filterProduct, productSearch, setPsearch } =
+    useContext(ProductContext);
   const { cart, addToCart } = useContext(CartContext);
   const { addToWishlist } = useContext(WishlistContext);
   const [wishlist, setWishlist] = useState([]);
   const navigate = useNavigate();
   const [select, setSelect] = useState("all");
+  const toggleWishlist = (product, e) => {
+    e.stopPropagation();
 
-  const toggleWishlist = (productId) => {
-    setWishlist((prev) =>
-      prev.includes(productId)
-        ? prev.filter((id) => id !== productId)
-        : [...prev, productId]
-    );
-    // console.log(wishlist);
+    setWishlist((prev) => {
+      if (prev.includes(product.id)) {
+        handleMessage("Removed from wishlist!");
+        return prev.filter((id) => id !== product.id);
+      } else {
+        handleMessage("Added to wishlist!");
+        return [...prev, product.id];
+      }
+    });
 
-    // need sent wishlist into wishlist provider
-    addToWishlist(productId);
-    handleMessage()
+    addToWishlist(product); // send full product
   };
 
-
-   const handleMessage = () => {
-      Swal.fire({
-    toast: true,              // Make it a toast
-    position: "top-end",      // Position of the toast
-    icon: "success",          // Icon type (success, error, info, warning, question)
-    title: "Added to wishlist!", // Toast message
-    showConfirmButton: false, // No confirmation button for toast
-    timer: 2000,              // Auto-close after 2 seconds
-    timerProgressBar: true,
-  });
-      console.log("hiiiiiii");
-    };
+  const handleMessage = (msg) => {
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "success",
+      title: msg,
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+    });
+  };
 
   //filtering
 
@@ -66,12 +61,11 @@ const ShoppingPage = () => {
     addToCart(product);
   };
 
-   
   const isInCart = (productId) => {
     return cart.some((item) => item.productId === productId);
   };
 
-  const renderRating = (rating) => {
+  const renderRating = (rating = 0) => {
     return [...Array(5)].map((_, i) => (
       <span key={i} className={i < rating ? "text-amber-400" : "text-gray-300"}>
         ★
@@ -130,19 +124,16 @@ const ShoppingPage = () => {
           <p className="text-gray-500 font-medium">
             Discover our selection of premium products
           </p>
-<div className="relative w-full max-w-sm mx-auto">
-  <input
-    type="text"
-    placeholder="Search products..."
-    value={productSearch}
-    onChange={(e) => setPsearch(e.target.value)}
-    className="w-full pl-10 pr-4 py-2 rounded-lg shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors duration-200"
-  />
-  <span className="absolute left-3 top-2.5 text-gray-400">
-    🔍
-  </span>
-</div>
-
+          <div className="relative w-full max-w-sm mx-auto">
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={productSearch}
+              onChange={(e) => setPsearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 rounded-lg shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors duration-200"
+            />
+            <span className="absolute left-3 top-2.5 text-gray-400">🔍</span>
+          </div>
         </div>
 
         {/* Product Grid */}
@@ -160,8 +151,8 @@ const ShoppingPage = () => {
                 {/* Wishlist */}
                 <button
                   onClick={(e) => {
-                    e.stopPropagation();
-                    toggleWishlist(product.id);
+                    // e.stopPropagation();
+                    toggleWishlist(product, e);
                   }}
                   className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/80 backdrop-blur-sm hover:scale-110 transition-all duration-200 shadow-xs"
                 >
@@ -212,7 +203,7 @@ const ShoppingPage = () => {
                       {renderRating(product.rating)}
                     </div>
                     <span className="text-xs text-gray-500 font-medium">
-                      ({product.rating.toFixed(1)})
+                      ({Number(product.rating ?? 0).toFixed(1)})
                     </span>
                   </div>
 
@@ -223,11 +214,12 @@ const ShoppingPage = () => {
                   <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-100/80">
                     <div>
                       <span className="text-xl font-bold text-gray-900">
-                        ${product.price.toFixed(2)}
+                        ${Number(product.price ?? 0).toFixed(2)}
                       </span>
-                      {product.originalPrice && (
+
+                      {product.originalPrice !== undefined && (
                         <span className="ml-2 text-sm text-gray-400 line-through">
-                          ${product.originalPrice.toFixed(2)}
+                          ${Number(product.originalPrice).toFixed(2)}
                         </span>
                       )}
                     </div>
