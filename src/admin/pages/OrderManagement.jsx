@@ -1,214 +1,59 @@
-import React, { useContext, useState, useEffect } from "react";
-import { ProductContext } from "../../context/ProductProvider";
+import { useContext, useEffect } from "react";
+import { OrderContext } from "../../context/OrderProvider";
 
-const ProductManagement = () => {
-  const {
-    products,
-    filteredProducts,
-    productSearch,
-    setPsearch,
-    filterProduct,
-    addProduct,
-    editProduct,
-    deleteProduct,
-    fetchProducts,
-    loading,
-  } = useContext(ProductContext);
-
-  const [formData, setFormData] = useState({
-    name: "",
-    brand: "",
-    category: "",
-    gender: "Men",
-    price: "",
-    rating: "",
-    stock: "",
-    images: [],
-  });
-
-  const [editId, setEditId] = useState(null);
+export default function OrderManagement() {
+  const { orders, fetchOrders, setOrderStatus } = useContext(OrderContext);
 
   useEffect(() => {
-    fetchProducts(); // always load fresh products
+    fetchOrders();
   }, []);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (editId) {
-      // edit mode
-      editProduct(editId, formData);
-      setEditId(null);
-    } else {
-      // add mode
-      addProduct(formData);
-    }
-
-    setFormData({
-      name: "",
-      brand: "",
-      category: "",
-      gender: "Men",
-      price: "",
-      rating: "",
-      stock: "",
-      images: [],
-    });
-  };
-
-  const handleEdit = (product) => {
-    setFormData(product);
-    setEditId(product.id);
-  };
-
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
-      deleteProduct(id);
-    }
+  const handleStatusChange = (userId, orderId, e) => {
+    const newStatus = e.target.value;
+    setOrderStatus(userId, orderId, newStatus);
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-semibold mb-4">Product Management</h2>
-
-      {/* 🔍 Search + Filter */}
-      <div className="flex gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Search by name..."
-          value={productSearch}
-          onChange={(e) => setPsearch(e.target.value)}
-          className="border rounded px-3 py-2"
-        />
-        <select
-          onChange={(e) => filterProduct(e.target.value)}
-          className="border rounded px-3 py-2"
-        >
-          <option value="all">All</option>
-          <option value="men">Men</option>
-          <option value="women">Women</option>
-        </select>
-      </div>
-
-      {/* 📝 Add / Edit Product Form */}
-      <form onSubmit={handleSubmit} className="mb-6 space-y-3">
-        <input
-          type="text"
-          name="name"
-          placeholder="Product Name"
-          value={formData.name}
-          onChange={handleChange}
-          className="border rounded px-3 py-2 w-full"
-          required
-        />
-        <input
-          type="text"
-          name="brand"
-          placeholder="Brand"
-          value={formData.brand}
-          onChange={handleChange}
-          className="border rounded px-3 py-2 w-full"
-        />
-        <input
-          type="text"
-          name="category"
-          placeholder="Category"
-          value={formData.category}
-          onChange={handleChange}
-          className="border rounded px-3 py-2 w-full"
-        />
-        <select
-          name="gender"
-          value={formData.gender}
-          onChange={handleChange}
-          className="border rounded px-3 py-2 w-full"
-        >
-          <option value="Men">Men</option>
-          <option value="Women">Women</option>
-        </select>
-        <input
-          type="number"
-          name="price"
-          placeholder="Price"
-          value={formData.price}
-          onChange={handleChange}
-          className="border rounded px-3 py-2 w-full"
-        />
-        <input
-          type="number"
-          name="rating"
-          placeholder="Rating"
-          value={formData.rating}
-          onChange={handleChange}
-          className="border rounded px-3 py-2 w-full"
-        />
-        <input
-          type="number"
-          name="stock"
-          placeholder="Stock"
-          value={formData.stock}
-          onChange={handleChange}
-          className="border rounded px-3 py-2 w-full"
-        />
-
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          {editId ? "Update Product" : "Add Product"}
-        </button>
-      </form>
-
-      {/* 📦 Product List */}
-      {loading ? (
-        <p>Loading products...</p>
+    <div className="p-6 min-h-screen bg-gray-50">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Order Management</h2>
+      {orders.length === 0 ? (
+        <p className="text-gray-500 text-lg">No orders found.</p>
       ) : (
-        <table className="w-full border">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="p-2 border">Name</th>
-              <th className="p-2 border">Brand</th>
-              <th className="p-2 border">Category</th>
-              <th className="p-2 border">Gender</th>
-              <th className="p-2 border">Price</th>
-              <th className="p-2 border">Stock</th>
-              <th className="p-2 border">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredProducts.map((p) => (
-              <tr key={p.id}>
-                <td className="p-2 border">{p.name}</td>
-                <td className="p-2 border">{p.brand}</td>
-                <td className="p-2 border">{p.category}</td>
-                <td className="p-2 border">{p.gender}</td>
-                <td className="p-2 border">${p.price}</td>
-                <td className="p-2 border">{p.stock}</td>
-                <td className="p-2 border flex gap-2">
-                  <button
-                    onClick={() => handleEdit(p)}
-                    className="bg-yellow-500 text-white px-3 py-1 rounded"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(p.id)}
-                    className="bg-red-600 text-white px-3 py-1 rounded"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="grid gap-6">
+          {orders.map((order) => (
+            <div
+              key={order.id}
+              className="bg-white shadow-md rounded-xl p-5 border border-gray-200 hover:shadow-lg transition duration-200"
+            >
+              <div className="mb-3">
+                <p className="text-sm text-gray-500">
+                  <strong className="text-gray-700">Order ID:</strong> {order.id}
+                </p>
+                <p className="text-sm text-gray-500">
+                  <strong className="text-gray-700">User:</strong> {order.userName} ({order.userEmail})
+                </p>
+                <p className="text-sm text-gray-500">
+                  <strong className="text-gray-700">Status:</strong>{" "}
+                  <span className="font-medium text-blue-600">{order.status || "Not Set"}</span>
+                </p>
+              </div>
+
+              <select
+                value={order.status}
+                onChange={(e) => handleStatusChange(order.userId, order.id, e)}
+                className="w-full sm:w-1/2 p-2 border border-gray-300 rounded-lg text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                <option value="">Select Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Processing">Processing</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
-};
-
-export default ProductManagement;
+}

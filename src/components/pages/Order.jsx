@@ -22,11 +22,18 @@ const Order = () => {
     );
   }
 
+  const displayDate = (() => {
+    const raw = order?.createdAt ?? order?.created_at; // handles snake_case too
+    if (raw?.seconds) return new Date(raw.seconds * 1000); // Firestore Timestamp
+    const d = raw ? new Date(raw) : null;
+    return d && !isNaN(d.getTime()) ? d : new Date(); // fallback to current time
+  })();
+
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white shadow rounded-lg p-6">
         <h1 className="text-3xl font-bold text-gray-900 mb-6">
-          Order Confirmation
+          ORDER PLACED SUCCESSFULLY
         </h1>
 
         <div className="mb-6">
@@ -34,8 +41,10 @@ const Order = () => {
             <strong>Order ID:</strong> {order.id}
           </p>
           <p className="text-gray-700">
-            <strong>Date:</strong> {new Date(order.createdAt).toLocaleString()}
+            <strong>Date:</strong>{" "}
+            {displayDate.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
           </p>
+
           <p className="text-gray-700">
             <strong>Status:</strong> {order.status}
           </p>

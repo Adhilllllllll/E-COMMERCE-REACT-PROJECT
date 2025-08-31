@@ -1,4 +1,4 @@
-import { useState,useContext } from "react";
+import { useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthProvider";
 import { Outlet, useNavigate } from "react-router-dom";
 import {
@@ -6,12 +6,12 @@ import {
   FiUsers,
   FiShoppingBag,
   FiPackage,
-  FiSettings,
   FiLogOut,
-  FiSearch,
   FiBell,
   FiChevronDown,
 } from "react-icons/fi";
+
+import Swal from "sweetalert2";
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -67,15 +67,24 @@ const AdminLayout = () => {
                 <span>Order Management</span>
               </button>
             </li>
-            <li className="mb-2 mt-8">
-              <button className="w-full flex items-center p-2 rounded hover:bg-blue-800 transition-colors duration-200">
-                <FiSettings className="mr-3" />
-                <span>Settings</span>
-              </button>
-            </li>
+
             <li className="mb-2">
               <button
-                onClick={logout}
+                onClick={() => {
+                  Swal.fire({
+                    title: "Are you sure?",
+                    text: "You will be logged out of your account.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, Logout",
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      logout(); // call your logout function
+                    }
+                  });
+                }}
                 className="w-full flex items-center p-2 rounded hover:bg-blue-800 transition-colors duration-200"
               >
                 <FiLogOut className="mr-3" />
@@ -116,16 +125,6 @@ const AdminLayout = () => {
               </h1>
             </div>
             <div className="flex items-center">
-              {/* <div className="relative mr-4 hidden md:block">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FiSearch className="text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  className="pl-10 pr-4 py-2 w-64 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Search..."
-                />
-              </div> */}
               <button className="p-2 mr-4 text-gray-600 hover:text-gray-900 relative">
                 <FiBell />
                 <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
