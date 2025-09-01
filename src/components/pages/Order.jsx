@@ -1,10 +1,51 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { AuthContext } from "../../context/AuthProvider";
+import { userApi } from "../../Api";
 
 const Order = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const order = location.state?.order;
+  const { loggedInUser } = useContext(AuthContext);
+  const orderId = location.state?.order?.id;
+
+  const [order, setOrder] = useState(location.state?.order || null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      if (!loggedInUser || !orderId) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        // Fetch latest user data
+        const { data: userData } = await axios.get(`${userApi}/${loggedInUser.id}`);
+
+        // Find the latest version of the order
+        const latestOrder = userData.orders.find((o) => o.id === orderId);
+
+        setOrder(latestOrder || null);
+      } catch (error) {
+        console.error("Failed to fetch order:", error);
+        setOrder(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrder();
+  }, [loggedInUser, orderId]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-700 text-lg">Loading order details...</p>
+      </div>
+    );
+  }
 
   if (!order) {
     return (
@@ -22,16 +63,11 @@ const Order = () => {
     );
   }
 
-  const displayDate = (() => {
-    const raw = order?.createdAt ?? order?.created_at; // handles snake_case too
-    if (raw?.seconds) return new Date(raw.seconds * 1000); // Firestore Timestamp
-    const d = raw ? new Date(raw) : null;
-    return d && !isNaN(d.getTime()) ? d : new Date(); // fallback to current time
-  })();
+  const displayDate = order.createdAt ? new Date(order.createdAt) : new Date();
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto bg-white shadow rounded-lg p-6">
+      <div className="max-w-4xl mx-auto bg-white mt-7 shadow rounded-lg p-6">
         <h1 className="text-3xl font-bold text-gray-900 mb-6">
           ORDER PLACED SUCCESSFULLY
         </h1>
@@ -44,7 +80,6 @@ const Order = () => {
             <strong>Date:</strong>{" "}
             {displayDate.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
           </p>
-
           <p className="text-gray-700">
             <strong>Status:</strong> {order.status}
           </p>

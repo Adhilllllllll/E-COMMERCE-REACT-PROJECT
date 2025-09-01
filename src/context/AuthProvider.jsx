@@ -25,15 +25,26 @@ const AuthProvider = ({ children }) => {
 
   // Register new user (default role = customer, default isBlock = false)
   const registration = async (formData) => {
-    try {
-      await axios.post(userApi, { ...formData, role: "customer", isBlock: false });
-      navigate("/login");
-      toast.success("Registration successful! Please login.");
-    } catch (error) {
-      console.error("Error registering user:", error);
-      toast.error("Registration failed. Try again!");
+  try {
+    // Fetch all users first
+    const { data } = await axios.get(userApi);
+    
+    // Check if email already exists
+    const emailExists = data.some(user => user.email === formData.email);
+    if (emailExists) {
+      toast.error("🚨 This email is already registered!");
+      return;
     }
-  };
+
+    // If not, proceed with registration
+    await axios.post(userApi, { ...formData, role: "customer", isBlock: false });
+    navigate("/login");
+    toast.success("Registration successful! Please login.");
+  } catch (error) {
+    console.error("Error registering user:", error);
+    toast.error("Registration failed. Try again!");
+  }
+};
 
   // Login
   const login = async (email, password) => {

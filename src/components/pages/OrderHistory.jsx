@@ -1,16 +1,31 @@
-import React, { useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import { OrderContext } from "../../context/OrderProvider";
+import axios from "axios";
+import { userApi } from "../../Api";
 
 const OrderHistory = () => {
-  const { loggedInUser } = useContext(AuthContext);
-  // const { orders } = useContext(OrderContext);
+  const { loggedInUser, setLoggedInUser } = useContext(AuthContext);
+  const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
 
-  if (!loggedInUser?.orders || loggedInUser.orders.length === 0) {
-   
+  useEffect(() => {
+    const fetchOrders = async () => {
+      if (!loggedInUser) return;
+      try {
+        const { data } = await axios.get(`${userApi}/${loggedInUser.id}`);
+        setOrders(data.orders || []);
+        // update context as well, so latest data is stored
+        setLoggedInUser(data);
+      } catch (error) {
+        console.error("Failed to fetch orders:", error);
+      }
+    };
 
+    fetchOrders();
+  }, [loggedInUser, setLoggedInUser]);
+
+  if (!orders || orders.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -27,10 +42,10 @@ const OrderHistory = () => {
   }
 
   return (
-    <div className="max-w-4xl  mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-6"><br/>My Orders</h1>
+    <div className="max-w-4xl mx-auto py-8 mt-7">
+      <h1 className="text-3xl font-bold mb-6">My Orders</h1>
       <div className="space-y-6">
-        {loggedInUser.orders.map((order) => (
+        {orders.map((order) => (
           <div key={order.id} className="p-4 border rounded-md shadow-sm bg-white">
             <p><strong>Order ID:</strong> {order.id}</p>
             <p><strong>Date:</strong> {new Date(order.createdAt).toLocaleString()}</p>

@@ -3,39 +3,28 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ProductContext } from "../../context/ProductProvider";
 import { CartContext } from "../../context/CartProvider";
 import { useWishlist } from "../../context/WishListProvider";
+import { AuthContext } from "../../context/AuthProvider";
 import { toast } from "react-toastify";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { products } = useContext(ProductContext); // Get products array from context
+  const { products } = useContext(ProductContext);
   const { addToCart } = useContext(CartContext);
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { loggedInUser } = useContext(AuthContext);
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [product, setProduct] = useState(null);
 
-
-
-  const handleCartClick=(e,product)=>{
-  
-    e.stopPropagation();
-    addToCart(product)
-      toast("added succefulyy")
-
-    
-  }
-
-  // When products change, find the product by ID
   useEffect(() => {
     if (products.length > 0) {
-      const found = products.find((p) => p.id === id);
+      const found = products.find((p) => Number(p.id) === Number(id));
       setProduct(found || null);
     }
   }, [products, id]);
 
-  // Loading state while products are being fetched
   if (!products || products.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -44,7 +33,6 @@ const ProductDetails = () => {
     );
   }
 
-  // Product not found case
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -61,13 +49,25 @@ const ProductDetails = () => {
     );
   }
 
-  const handleAddToCart = () => addToCart(product);
+  const handleCartClick = (e) => {
+    e.stopPropagation();
+    addToCart(product);
+    toast.success("Added to cart successfully!");
+  };
+
+  const handleWishlistClick = () => {
+    if (!loggedInUser) {
+      toast.info("Please login to add to wishlist");
+      navigate("/login");
+      return;
+    }
+    toggleWishlist(product.id);
+    toast.success(isInWishlist(product.id) ? "Removed from wishlist" : "Added to wishlist");
+  };
 
   const renderRating = (rating) =>
     [...Array(5)].map((_, i) => (
-      <span key={i} className={i < rating ? "text-amber-400" : "text-gray-300"}>
-        ★
-      </span>
+      <span key={i} className={i < rating ? "text-amber-400" : "text-gray-300"}>★</span>
     ));
 
   const HeartIcon = ({ filled }) => (
@@ -90,7 +90,6 @@ const ProductDetails = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container mx-auto px-4">
-        {/* Back button */}
         <button
           onClick={() => navigate(-1)}
           className="mb-6 flex items-center text-gray-600 hover:text-gray-900"
@@ -102,7 +101,7 @@ const ProductDetails = () => {
         </button>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Product Images */}
+          {/* Images */}
           <div>
             <div className="bg-white rounded-lg overflow-hidden mb-4 h-96 flex items-center justify-center">
               {product.images?.[selectedImage] ? (
@@ -115,9 +114,7 @@ const ProductDetails = () => {
                 <div className="text-gray-300">No Image</div>
               )}
             </div>
-
-            {/* Image thumbnails */}
-            {product.images && product.images.length > 1 && (
+            {product.images?.length > 1 && (
               <div className="grid grid-cols-4 gap-2">
                 {product.images.map((img, index) => (
                   <button
@@ -134,11 +131,11 @@ const ProductDetails = () => {
             )}
           </div>
 
-          {/* Product Info */}
+          {/* Info */}
           <div>
             <div className="flex justify-between items-start mb-4">
               <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
-              <button onClick={() => toggleWishlist(product.id)} className="p-2 rounded-full hover:bg-gray-100">
+              <button onClick={handleWishlistClick} className="p-2 rounded-full hover:bg-gray-100">
                 <HeartIcon filled={isInWishlist(product.id)} />
               </button>
             </div>
@@ -148,7 +145,7 @@ const ProductDetails = () => {
             <div className="mb-4">{renderRating(Math.round(product.rating))}</div>
 
             <button
-              onClick={(e)=>handleCartClick(e,product)}
+              onClick={handleCartClick}
               className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
             >
               Add to Cart

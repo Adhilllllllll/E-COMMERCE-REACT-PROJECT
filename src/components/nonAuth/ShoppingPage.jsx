@@ -1,77 +1,71 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ProductContext } from "../../context/ProductProvider";
 import { CartContext } from "../../context/CartProvider";
+import { useWishlist } from "../../context/WishListProvider";
+import { AuthContext } from "../../context/AuthProvider";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { WishlistContext } from "../../context/WishListProvider";
 import Swal from "sweetalert2";
 
 const ShoppingPage = () => {
   const { filteredProducts, filterProduct, productSearch, setPsearch } =
     useContext(ProductContext);
   const { cart, addToCart } = useContext(CartContext);
-  const { addToWishlist } = useContext(WishlistContext);
-  const [wishlist, setWishlist] = useState([]);
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const { loggedInUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [select, setSelect] = useState("all");
-  const toggleWishlist = (product, e) => {
-    e.stopPropagation();
-
-    setWishlist((prev) => {
-      if (prev.includes(product.id)) {
-        handleMessage("Removed from wishlist!");
-        return prev.filter((id) => id !== product.id);
-      } else {
-        handleMessage("Added to wishlist!");
-        return [...prev, product.id];
-      }
-    });
-
-    addToWishlist(product); // send full product
-  };
-
-  const handleMessage = (msg) => {
-    Swal.fire({
-      toast: true,
-      position: "top-end",
-      icon: "success",
-      title: msg,
-      showConfirmButton: false,
-      timer: 2000,
-      timerProgressBar: true,
-    });
-  };
-
-  //filtering
 
   useEffect(() => {
     filterProduct(select);
   }, [select]);
 
-  const handleFilter = (e) => {
-    setSelect(e.target.value);
-  };
+  const handleFilter = (e) => setSelect(e.target.value);
 
-  const handleProductClick = (productId) => {
-    navigate(`/productdetails/${productId}`);
-  };
+  const handleProductClick = (productId) => navigate(`/productdetails/${productId}`);
 
   const handleAddToCart = (product, e) => {
     e.stopPropagation();
     addToCart(product);
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "success",
+      title: "Added to cart!",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+    });
   };
 
-  const isInCart = (productId) => {
-    return cart.some((item) => item.productId === productId);
+  const handleWishlistClick = (product, e) => {
+    e.stopPropagation();
+    if (!loggedInUser) {
+      Swal.fire({
+        icon: "info",
+        title: "Please login to add to wishlist",
+      });
+      navigate("/login");
+      return;
+    }
+    toggleWishlist(product.id);
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: isInWishlist(product.id) ? "error" : "success",
+      title: isInWishlist(product.id) ? "Removed from wishlist" : "Added to wishlist",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+    });
   };
 
-  const renderRating = (rating = 0) => {
-    return [...Array(5)].map((_, i) => (
-      <span key={i} className={i < rating ? "text-amber-400" : "text-gray-300"}>
-        ★
-      </span>
+  const isInCart = (productId) => cart.some((item) => item.productId === productId);
+
+  const renderRating = (rating = 0) =>
+    [...Array(5)].map((_, i) => (
+      <span key={i} className={i < rating ? "text-amber-400" : "text-gray-300"}>★</span>
     ));
-  };
 
   const HeartIcon = ({ filled }) => (
     <svg
@@ -80,9 +74,7 @@ const ShoppingPage = () => {
       fill={filled ? "currentColor" : "none"}
       stroke="currentColor"
       strokeWidth="1.5"
-      className={`h-5 w-5 ${
-        filled ? "text-rose-500" : "text-gray-400 hover:text-rose-400"
-      }`}
+      className={`h-5 w-5 ${filled ? "text-rose-500" : "text-gray-400 hover:text-rose-400"}`}
     >
       <path
         strokeLinecap="round"
@@ -93,37 +85,26 @@ const ShoppingPage = () => {
   );
 
   return (
-    <div className="min-h-screen  bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="container  mx-auto px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="container mx-auto px-4 py-12">
         {/* Filters */}
         <div className="flex gap-4 mb-6 mt-10">
           <select
             value={select}
-            onChange={(e) => handleFilter(e)}
+            onChange={handleFilter}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent"
           >
             <option value="all">All</option>
             <option value="Men">Men</option>
             <option value="Women">Female</option>
-            {/* <option value="Unisex">Unisex</option> */}
           </select>
-
-          {/* <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent">
-            <option value="category">Category</option>
-            <option value="indoor">Indoor</option>
-            <option value="outdoor">Outdoor</option>
-          </select> */}
         </div>
 
         {/* Heading */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl font-light text-gray-800 mb-2 tracking-tight">
-            CURATED COLLECTION
-          </h1>
+          <h1 className="text-4xl font-light text-gray-800 mb-2 tracking-tight">CURATED COLLECTION</h1>
           <div className="w-24 h-0.5 bg-amber-400 mx-auto mb-4"></div>
-          <p className="text-gray-500 font-medium">
-            Discover our selection of premium products
-          </p>
+          <p className="text-gray-500 font-medium">Discover our selection of premium products</p>
           <div className="relative w-full max-w-sm mx-auto">
             <input
               type="text"
@@ -138,115 +119,78 @@ const ShoppingPage = () => {
 
         {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {filteredProducts
-            .slice()
-            .reverse()
-            .map((product) => (
-              <motion.div
-                key={product.id}
-                whileHover={{ y: -8 }}
-                className="relative bg-white rounded-lg shadow-xs hover:shadow-md transition-all duration-300 flex flex-col border border-gray-200/80 overflow-hidden group cursor-pointer"
-                onClick={() => handleProductClick(product.id)}
+          {filteredProducts.slice().reverse().map((product) => (
+            <motion.div
+              key={product.id}
+              whileHover={{ y: -8 }}
+              className="relative bg-white rounded-lg shadow-xs hover:shadow-md transition-all duration-300 flex flex-col border border-gray-200/80 overflow-hidden group cursor-pointer"
+              onClick={() => handleProductClick(product.id)}
+            >
+              {/* Wishlist */}
+              <button
+                onClick={(e) => handleWishlistClick(product, e)}
+                className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/80 backdrop-blur-sm hover:scale-110 transition-all duration-200 shadow-xs"
               >
-                {/* Wishlist */}
-                <button
-                  onClick={(e) => {
-                    // e.stopPropagation();
-                    toggleWishlist(product, e);
-                  }}
-                  className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/80 backdrop-blur-sm hover:scale-110 transition-all duration-200 shadow-xs"
-                >
-                  <HeartIcon filled={wishlist.includes(product.id)} />
-                </button>
+                <HeartIcon filled={isInWishlist(product.id)} />
+              </button>
 
-                {/* Image */}
-                <div className="relative pt-[100%] bg-gray-50/50 flex items-center justify-center">
-                  {product.images?.[0] ? (
-                    <motion.img
-                      src={product.images[0]}
-                      alt={product.name}
-                      className="absolute top-0 left-0 w-full h-full object-contain p-8 transition-transform duration-500 group-hover:scale-110"
-                      whileHover={{ scale: 1.1 }}
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-gray-300">
-                      <svg
-                        className="w-12 h-12"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="1"
-                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
-                    </div>
-                  )}
+              {/* Image */}
+              <div className="relative pt-[100%] bg-gray-50/50 flex items-center justify-center">
+                {product.images?.[0] ? (
+                  <motion.img
+                    src={product.images[0]}
+                    alt={product.name}
+                    className="absolute top-0 left-0 w-full h-full object-contain p-8 transition-transform duration-500 group-hover:scale-110"
+                    whileHover={{ scale: 1.1 }}
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center text-gray-300">
+                    <span>No Image</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Info */}
+              <div className="p-5 flex-grow flex flex-col">
+                <div className="flex justify-between items-start mb-3">
+                  <h3 className="text-lg font-medium text-gray-800 line-clamp-1 tracking-tight">{product.name}</h3>
+                  <span className="bg-gray-100 text-gray-600 text-xs px-2.5 py-1 rounded-full ml-2 font-medium">{product.category}</span>
                 </div>
 
-                {/* Info */}
-                <div className="p-5 flex-grow flex flex-col">
-                  <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-lg font-medium text-gray-800 line-clamp-1 tracking-tight">
-                      {product.name}
-                    </h3>
-                    <span className="bg-gray-100 text-gray-600 text-xs px-2.5 py-1 rounded-full ml-2 font-medium">
-                      {product.category}
-                    </span>
-                  </div>
+                <div className="flex items-center mb-3">
+                  <div className="mr-2 text-sm">{renderRating(product.rating)}</div>
+                  <span className="text-xs text-gray-500 font-medium">({Number(product.rating ?? 0).toFixed(1)})</span>
+                </div>
 
-                  <div className="flex items-center mb-3">
-                    <div className="mr-2 text-sm">
-                      {renderRating(product.rating)}
-                    </div>
-                    <span className="text-xs text-gray-500 font-medium">
-                      ({Number(product.rating ?? 0).toFixed(1)})
-                    </span>
-                  </div>
+                <p className="text-sm text-gray-600 mb-5 line-clamp-2 flex-grow font-light tracking-tight">{product.description}</p>
 
-                  <p className="text-sm text-gray-600 mb-5 line-clamp-2 flex-grow font-light tracking-tight">
-                    {product.description}
-                  </p>
-
-                  <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-100/80">
-                    <div>
-                      <span className="text-xl font-bold text-gray-900">
-                        ${Number(product.price ?? 0).toFixed(2)}
-                      </span>
-
-                      {product.originalPrice !== undefined && (
-                        <span className="ml-2 text-sm text-gray-400 line-through">
-                          ${Number(product.originalPrice).toFixed(2)}
-                        </span>
-                      )}
-                    </div>
-
-                    {/*  Correct conditional */}
-                    {isInCart(product.id) ? (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate("/cart");
-                        }}
-                        className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium"
-                      >
-                        View in Cart
-                      </button>
-                    ) : (
-                      <button
-                        onClick={(e) => handleAddToCart(product, e)}
-                        className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2.5 rounded-lg text-sm font-medium"
-                      >
-                        Add to Cart
-                      </button>
+                <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-100/80">
+                  <div>
+                    <span className="text-xl font-bold text-gray-900">${Number(product.price ?? 0).toFixed(2)}</span>
+                    {product.originalPrice !== undefined && (
+                      <span className="ml-2 text-sm text-gray-400 line-through">${Number(product.originalPrice).toFixed(2)}</span>
                     )}
                   </div>
+
+                  {isInCart(product.id) ? (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); navigate("/cart"); }}
+                      className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium"
+                    >
+                      View in Cart
+                    </button>
+                  ) : (
+                    <button
+                      onClick={(e) => handleAddToCart(product, e)}
+                      className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2.5 rounded-lg text-sm font-medium"
+                    >
+                      Add to Cart
+                    </button>
+                  )}
                 </div>
-              </motion.div>
-            ))}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </div>

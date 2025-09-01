@@ -53,39 +53,39 @@ const DashboardContent = () => {
   const activeAccounts = users.filter((u) => !u.isBlock && !u.isDelete).length;
 
   const statsData = [
-    {
-      title: "Total Revenue",
-      value: `$${totalRevenue.toLocaleString()}`,
-      trend: "up",
-      trendText: "Revenue from stock * price",
-      icon: <FiBarChart2 className="text-blue-500" />,
-      bgColor: "bg-blue-100",
-    },
-    {
-      title: "New Customers",
-      value: totalUsers.toString(),
-      trend: "up",
-      trendText: "All registered users",
-      icon: <FiUsers className="text-purple-500" />,
-      bgColor: "bg-purple-100",
-    },
-    {
-      title: "Active Accounts",
-      value: activeAccounts.toString(),
-      trend: "up",
-      trendText: "Users not blocked/deleted",
-      icon: <FiUsers className="text-green-500" />,
-      bgColor: "bg-green-100",
-    },
-    {
-      title: "Growth Rate",
-      value: `${((activeAccounts / totalUsers) * 100 || 0).toFixed(1)}%`,
-      trend: "up",
-      trendText: "Active users vs total",
-      icon: <FiBarChart className="text-orange-500" />,
-      bgColor: "bg-orange-100",
-    },
-  ];
+  {
+    title: "Total Revenue",
+    value: `$${totalRevenue.toLocaleString()}`,
+    trend: "up",
+    trendText: "Revenue from stock * price",
+    icon: <FiBarChart2 className="text-blue-500" />,
+    bgColor: "bg-blue-100",
+  },
+  {
+    title: "New Customers",
+    value: totalUsers.toString(),
+    trend: "up",
+    trendText: "All registered users",
+    icon: <FiUsers className="text-purple-500" />,
+    bgColor: "bg-purple-100",
+  },
+  {
+    title: "Active Accounts",
+    value: activeAccounts.toString(),
+    trend: "up",
+    trendText: "Users not blocked/deleted",
+    icon: <FiUsers className="text-green-500" />,
+    bgColor: "bg-green-100",
+  },
+  {
+    title: "Total Products",
+    value: products.length.toString(),
+    trend: "up",
+    trendText: "Total products in inventory",
+    icon: <FiBarChart className="text-orange-500" />,
+    bgColor: "bg-orange-100",
+  },
+];
 
   return (
     <>

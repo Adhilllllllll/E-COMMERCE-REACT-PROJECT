@@ -12,89 +12,64 @@ const ProductProvider = ({ children }) => {
   const [selectGender, setSelectGender] = useState("all");
   const [loading, setLoading] = useState(false);
 
-  //  Fetch products from DB
-  // const fetchProducts = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const { data } = await axios.get(productAPI);
-  //     setProducts(data.map((p)=>({...p,id:p.id || p._id})));
-  //     setFilteredProducts(data);
-  //   } catch (error) {
-  //     console.error("Error fetching products:", error.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  const fetchProducts=async()=>{
-    try{
+  const fetchProducts = async () => {
+    try {
       setLoading(true);
-      const{data}=await axios.get(productAPI);
-
-      const normalized=data.map((p)=>({
-        ...p,id:p.id || p.id,
-      }));
+      const { data } = await axios.get(productAPI);
+      const normalized = data.map((p) => ({ ...p, id: p.id || p._id }));
       setProducts(normalized);
       setFilteredProducts(normalized);
-    }catch(error){
-      console.error('error fetching products:',error.message);
-    }finally{
+    } catch (error) {
+      console.error("Error fetching products:", error.message);
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
-  //  Filtering (gender + search)
- useEffect(() => {
-  let temp = [...products];
+  // Filtering
+  useEffect(() => {
+    let temp = [...products];
 
-  if (selectGender !== "all") {
-    temp = temp.filter(
-      (p) => p.gender && p.gender.toLowerCase() === selectGender.toLowerCase()
-    );
-  }
+    if (selectGender !== "all") {
+      temp = temp.filter((p) => p.gender && p.gender.toLowerCase() === selectGender.toLowerCase());
+    }
 
- if (productSearch) {
-  temp = temp.filter((p) =>
-    (p.name || "").toLowerCase().includes(productSearch.toLowerCase())
-  );
-}
+    if (productSearch) {
+      temp = temp.filter((p) =>
+        (p.name || "").toLowerCase().includes(productSearch.toLowerCase())
+      );
+    }
 
+    setFilteredProducts(temp);
+  }, [products, productSearch, selectGender]);
 
-  setFilteredProducts(temp);
-}, [products, productSearch, selectGender]);
+  const filterProduct = (gender) => setSelectGender(gender);
 
-
-  const filterProduct = (gender) => {
-    setSelectGender(gender);
-  };
-
-  // Add Product (Admin)
+  // Add Product
   const addProduct = async (newProduct) => {
     try {
       const { data } = await axios.post(productAPI, newProduct);
-      setProducts((prev) => [...prev,{...data,id:data.id || data._id}]);
+      setProducts((prev) => [...prev, { ...data, id: data.id || data._id }]);
     } catch (error) {
       console.error("Error adding product:", error.message);
     }
   };
 
-  // Edit Product (Admin)
+  // Edit Product
   const editProduct = async (id, updatedProduct) => {
     try {
       const { data } = await axios.put(`${productAPI}/${id}`, updatedProduct);
-      setProducts((prev) =>
-        prev.map((p) => (p.id === id ? data : p))
-      );
+      setProducts((prev) => prev.map((p) => (p.id === id ? data : p)));
     } catch (error) {
       console.error("Error editing product:", error.message);
     }
   };
 
-  //   Delete Product (Admin)
+  // Delete Product
   const deleteProduct = async (id) => {
     try {
       await axios.delete(`${productAPI}/${id}`);
@@ -116,7 +91,7 @@ const ProductProvider = ({ children }) => {
         editProduct,
         deleteProduct,
         fetchProducts,
-        loading,
+        loading
       }}
     >
       {children}

@@ -8,6 +8,7 @@ const defaultForm = {
   price: "",
   stock: "",
   status: "Active",
+  images: [""], // Now an array for multiple images
 };
 
 const ProductManagement = () => {
@@ -24,13 +25,40 @@ const ProductManagement = () => {
     setShowForm(true);
   };
 
+  const handleImageChange = (index, value) => {
+    const newImages = [...formData.images];
+    newImages[index] = value;
+    setFormData({ ...formData, images: newImages });
+  };
+
+  const handleAddImageField = () =>
+    setFormData({ ...formData, images: [...formData.images, ""] });
+
+  const handleRemoveImageField = (index) =>
+    setFormData({
+      ...formData,
+      images: formData.images.filter((_, i) => i !== index),
+    });
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const filteredImages = formData.images.filter((img) => img.trim() !== "");
+    if (
+      !formData.name ||
+      !formData.category ||
+      !formData.price ||
+      filteredImages.length === 0
+    ) {
+      alert("Please fill all required fields and add at least one image.");
+      return;
+    }
 
     const normalizedData = {
       ...formData,
       price: Number(formData.price),
       stock: Number(formData.stock),
+      images: filteredImages,
     };
 
     editingProduct
@@ -38,14 +66,8 @@ const ProductManagement = () => {
       : addProduct(normalizedData);
 
     setShowForm(false);
+    setFormData(defaultForm);
   };
-
-  const formFields = [
-    { name: "name", type: "text", placeholder: "Product Name" },
-    { name: "category", type: "text", placeholder: "Category" },
-    { name: "price", type: "number", placeholder: "Price" },
-    { name: "stock", type: "number", placeholder: "Stock Quantity" },
-  ];
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
@@ -67,23 +89,41 @@ const ProductManagement = () => {
         <table className="min-w-full border border-gray-200 divide-y divide-gray-200 rounded-lg overflow-hidden">
           <thead className="bg-gray-100">
             <tr>
-              {["Product", "Category", "Price", "Stock", "Status", "Actions"].map(
-                (col) => (
-                  <th
-                    key={col}
-                    className="px-6 py-3 text-left text-sm font-medium text-gray-700"
-                  >
-                    {col}
-                  </th>
-                )
-              )}
+              {[
+                "Images",
+                "Product",
+                "Category",
+                "Price",
+                "Stock",
+                "Status",
+                "Actions",
+              ].map((col) => (
+                <th
+                  key={col}
+                  className="px-6 py-3 text-left text-sm font-medium text-gray-700"
+                >
+                  {col}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {products.map((p) => (
               <tr key={p.id} className="hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-3 flex gap-2">
+                  {p.images?.map((img, idx) => (
+                    <img
+                      key={idx}
+                      src={img}
+                      alt={p.name}
+                      className="w-12 h-12 object-cover rounded"
+                    />
+                  ))}
+                </td>
                 <td className="px-6 py-3 text-sm text-gray-800">{p.name}</td>
-                <td className="px-6 py-3 text-sm text-gray-800">{p.category}</td>
+                <td className="px-6 py-3 text-sm text-gray-800">
+                  {p.category}
+                </td>
                 <td className="px-6 py-3 text-sm text-gray-800">${p.price}</td>
                 <td className="px-6 py-3 text-sm text-gray-800">{p.stock}</td>
                 <td className="px-6 py-3">
@@ -137,7 +177,7 @@ const ProductManagement = () => {
             {products.length === 0 && (
               <tr>
                 <td
-                  colSpan="6"
+                  colSpan="7"
                   className="px-6 py-4 text-center text-gray-500 text-sm"
                 >
                   No products available.
@@ -156,19 +196,82 @@ const ProductManagement = () => {
               {editingProduct ? "Edit Product" : "Add Product"}
             </h3>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {formFields.map(({ name, type, placeholder }) => (
-                <input
-                  key={name}
-                  type={type}
-                  placeholder={placeholder}
-                  value={formData[name]}
-                  onChange={(e) =>
-                    setFormData({ ...formData, [name]: e.target.value })
-                  }
-                  className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              ))}
+              <input
+                type="text"
+                placeholder="Product Name"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Category"
+                value={formData.category}
+                onChange={(e) =>
+                  setFormData({ ...formData, category: e.target.value })
+                }
+                className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <input
+                type="number"
+                placeholder="Price"
+                value={formData.price}
+                onChange={(e) =>
+                  setFormData({ ...formData, price: e.target.value })
+                }
+                className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <input
+                type="number"
+                placeholder="Stock Quantity"
+                value={formData.stock}
+                onChange={(e) =>
+                  setFormData({ ...formData, stock: e.target.value })
+                }
+                className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+
+              {/* Multiple Images */}
+              {/* Multiple Images */}
+              <div>
+                <label className="block mb-2 font-medium text-gray-700">
+                  Images
+                </label>
+                {formData.images.map((img, idx) => (
+                  <div key={idx} className="flex gap-2 mb-2 items-center">
+                    <input
+                      type="text" // <-- changed from "url" to "text"
+                      placeholder="Image URL or path"
+                      value={img}
+                      onChange={(e) => handleImageChange(idx, e.target.value)}
+                      className="flex-1 border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                    {formData.images.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveImageField(idx)}
+                        className="text-red-600"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={handleAddImageField}
+                  className="text-blue-600"
+                >
+                  + Add More Images
+                </button>
+              </div>
 
               {/* Status */}
               <select

@@ -1,74 +1,76 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect } from "react";
+import { AuthContext } from "./AuthProvider"; // adjust path
 
 export const WishlistContext = createContext();
 
 export const useWishlist = () => {
   const context = useContext(WishlistContext);
   if (!context) {
-    throw new Error('useWishlist must be used within a WishlistProvider');
+    throw new Error("useWishlist must be used within a WishlistProvider");
   }
   return context;
 };
 
 export const WishlistProvider = ({ children }) => {
+  const { loggedInUser } = useContext(AuthContext);
   const [wishlist, setWishlist] = useState([]);
 
-  // Load wishlist from localStorage on initial render
+  // Load wishlist from localStorage
   useEffect(() => {
-    const savedWishlist = localStorage.getItem('wishlist');
+    const savedWishlist = localStorage.getItem("wishlist");
     if (savedWishlist) {
-      setWishlist(JSON.parse(savedWishlist));
+      try {
+        setWishlist(
+          JSON.parse(savedWishlist).map(id => Number(id)).filter(Boolean)
+        );
+      } catch (e) {
+        console.error("Error parsing wishlist from localStorage:", e);
+      }
     }
   }, []);
 
-  // Save wishlist to localStorage whenever it changes
+  // Save wishlist to localStorage
   useEffect(() => {
-    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
   }, [wishlist]);
-  console.log(wishlist);
-  
 
   const addToWishlist = (productId) => {
-    setWishlist(prev => {
-      if (!prev.includes(productId)) {
-        return [...prev, productId];
-      }
-      return prev;
-    });
+    if (!loggedInUser) {
+      alert("Please login to add items to wishlist");
+      return;
+    }
+    const id = Number(productId);
+    if (!id) return;
+    setWishlist(prev => (prev.includes(id) ? prev : [...prev, id]));
   };
 
   const removeFromWishlist = (productId) => {
-    setWishlist(prev => prev.filter(id => id !== productId));
+    const id = Number(productId);
+    setWishlist(prev => prev.filter(itemId => itemId !== id));
   };
 
   const toggleWishlist = (productId) => {
+    if (!loggedInUser) {
+      alert("Please login to add items to wishlist");
+      return;
+    }
+    const id = Number(productId);
     setWishlist(prev =>
-      prev.includes(productId)
-        ? prev.filter(id => id !== productId)
-        : [...prev, productId]
+      prev.includes(id) ? prev.filter(itemId => itemId !== id) : [...prev, id]
     );
   };
 
-  const isInWishlist = (productId) => {
-    return wishlist.includes(productId);
-  };
-
-  // const clearWishlist = () => {
-  //   setWishlist([]);
-  // };
-
-  const value = {
-    wishlist,
-    addToWishlist,
-    removeFromWishlist,
-    toggleWishlist,
-    isInWishlist,
-    // clearWishlist,
-    wishlistCount: wishlist.length
-  };
+  const isInWishlist = (productId) => wishlist.includes(Number(productId));
 
   return (
-    <WishlistContext.Provider value={value}>
+    <WishlistContext.Provider value={{
+      wishlist,
+      addToWishlist,
+      removeFromWishlist,
+      toggleWishlist,
+      isInWishlist,
+      wishlistCount: wishlist.length,
+    }}>
       {children}
     </WishlistContext.Provider>
   );
