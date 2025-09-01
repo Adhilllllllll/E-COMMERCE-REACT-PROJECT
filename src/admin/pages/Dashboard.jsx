@@ -27,7 +27,7 @@ const DashboardContent = () => {
       try {
         const [productRes, userRes] = await Promise.all([
           fetch(productAPI), // adjust API endpoint
-          fetch( userApi),
+          fetch(userApi),
         ]);
 
         const productData = await productRes.json();
@@ -53,39 +53,39 @@ const DashboardContent = () => {
   const activeAccounts = users.filter((u) => !u.isBlock && !u.isDelete).length;
 
   const statsData = [
-  {
-    title: "Total Revenue",
-    value: `$${totalRevenue.toLocaleString()}`,
-    trend: "up",
-    trendText: "Revenue from stock * price",
-    icon: <FiBarChart2 className="text-blue-500" />,
-    bgColor: "bg-blue-100",
-  },
-  {
-    title: "New Customers",
-    value: totalUsers.toString(),
-    trend: "up",
-    trendText: "All registered users",
-    icon: <FiUsers className="text-purple-500" />,
-    bgColor: "bg-purple-100",
-  },
-  {
-    title: "Active Accounts",
-    value: activeAccounts.toString(),
-    trend: "up",
-    trendText: "Users not blocked/deleted",
-    icon: <FiUsers className="text-green-500" />,
-    bgColor: "bg-green-100",
-  },
-  {
-    title: "Total Products",
-    value: products.length.toString(),
-    trend: "up",
-    trendText: "Total products in inventory",
-    icon: <FiBarChart className="text-orange-500" />,
-    bgColor: "bg-orange-100",
-  },
-];
+    {
+      title: "Total Revenue",
+      value: `$${totalRevenue.toLocaleString()}`,
+      trend: "up",
+      trendText: "Revenue from stock * price",
+      icon: <FiBarChart2 className="text-blue-500" />,
+      bgColor: "bg-blue-100",
+    },
+    {
+      title: "New Customers",
+      value: totalUsers.toString(),
+      trend: "up",
+      trendText: "All registered users",
+      icon: <FiUsers className="text-purple-500" />,
+      bgColor: "bg-purple-100",
+    },
+    {
+      title: "Active Accounts",
+      value: activeAccounts.toString(),
+      trend: "up",
+      trendText: "Users not blocked/deleted",
+      icon: <FiUsers className="text-green-500" />,
+      bgColor: "bg-green-100",
+    },
+    {
+      title: "Total Products",
+      value: products.length.toString(),
+      trend: "up",
+      trendText: "Total products in inventory",
+      icon: <FiBarChart className="text-orange-500" />,
+      bgColor: "bg-orange-100",
+    },
+  ];
 
   return (
     <>
@@ -115,40 +115,6 @@ const DashboardContent = () => {
           </div>
         ))}
       </div>
-
-      {/* Chart Section
-      <div className="bg-white rounded-lg shadow p-6 mb-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-2 md:mb-0">
-            Visitors for the last 6 months
-          </h2>
-          <div className="flex space-x-2">
-            {["last3months", "last30days", "last7days"].map((filter) => (
-              <button
-                key={filter}
-                className={`px-4 py-2 rounded-lg text-sm ${
-                  activeTimeFilter === filter
-                    ? "bg-blue-100 text-blue-700"
-                    : "bg-gray-100 text-gray-700"
-                }`}
-                onClick={() => setActiveTimeFilter(filter)}
-              >
-                {filter === "last3months"
-                  ? "Last 3 months"
-                  : filter === "last30days"
-                  ? "Last 30 days"
-                  : "Last 7 days"}
-              </button>
-            ))}
-          </div> */}
-        {/* </div> */}
-        {/* <div className="h-80 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
-          <div className="text-center">
-            <p className="text-xl font-semibold">Visitors Chart</p>
-            <p className="mt-2">Visualization of visitor data</p>
-          </div>
-        </div>
-      </div> */}
 
       {/* Recent Activity (from users list) */}
       <div className="bg-white rounded-lg shadow p-6">
@@ -193,16 +159,17 @@ const DashboardContent = () => {
                           : "bg-red-100 text-red-800"
                       }`}
                     >
-                      {!user.isBlock && !user.isDelete
-                        ? "Active"
-                        : "Inactive"}
+                      {!user.isBlock && !user.isDelete ? "Active" : "Inactive"}
                     </span>
                   </td>
                 </tr>
               ))}
               {users.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-4 py-3 text-center text-gray-500">
+                  <td
+                    colSpan={4}
+                    className="px-4 py-3 text-center text-gray-500"
+                  >
                     No users found
                   </td>
                 </tr>

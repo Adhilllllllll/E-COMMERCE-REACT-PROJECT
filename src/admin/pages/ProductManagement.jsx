@@ -8,7 +8,7 @@ const defaultForm = {
   price: "",
   stock: "",
   status: "Active",
-  images: [""], // Now an array for multiple images
+  images: [""], 
 };
 
 const ProductManagement = () => {
@@ -238,15 +238,14 @@ const ProductManagement = () => {
               />
 
               {/* Multiple Images */}
-              {/* Multiple Images */}
-              <div>
+               <div>
                 <label className="block mb-2 font-medium text-gray-700">
                   Images
                 </label>
                 {formData.images.map((img, idx) => (
                   <div key={idx} className="flex gap-2 mb-2 items-center">
                     <input
-                      type="text" // <-- changed from "url" to "text"
+                      type="text"  
                       placeholder="Image URL or path"
                       value={img}
                       onChange={(e) => handleImageChange(idx, e.target.value)}

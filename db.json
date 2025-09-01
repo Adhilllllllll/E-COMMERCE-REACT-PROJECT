@@ -8,7 +8,9 @@
       "gender": "Men",
       "price": 100,
       "rating": 4.8,
-      "images": ["/productimage/versace1.jpg"],
+      "images": [
+        "/productimage/versace1.jpg"
+      ],
       "stock": 40,
       "description": "A refined woody aromatic fragrance with grapefruit, incense, and sandalwood.",
       "status": "Active",
@@ -24,9 +26,10 @@
       "rating": 4.9,
       "images": [
         "/productimage/velisse.jpg"
-       ],
+      ],
       "stock": 15,
-      "description": "Luxurious oud with rose, vanilla, and violet — a sensual and elegant scent."
+      "description": "Luxurious oud with rose, vanilla, and violet — a sensual and elegant scent.",
+      "status": "Low Stock"
     },
     {
       "id": "3",
@@ -37,11 +40,11 @@
       "price": 130,
       "rating": 4.7,
       "images": [
-        "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRzTfajnTPBEkBhWPp1tiFNlxnBdoBwNrS8VBKB7bgNEJqhdzb4Yu_Qj0AEpkQsHGXtdI3E9h62Xeou0Q45udSU8zm5PwFUF15tw55Hi_1FVp6asDh5EVOOLKf6mGmr0_TF2aP6ViiEhR9D&usqp=CAc",
-        "https://images.unsplash.com/photo-1640699174379-b0c91561dbea?q=80&w=736&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRzTfajnTPBEkBhWPp1tiFNlxnBdoBwNrS8VBKB7bgNEJqhdzb4Yu_Qj0AEpkQsHGXtdI3E9h62Xeou0Q45udSU8zm5PwFUF15tw55Hi_1FVp6asDh5EVOOLKf6mGmr0_TF2aP6ViiEhR9D&usqp=CAc"
       ],
       "stock": 28,
-      "description": "A rich white floral fragrance with jasmine, tuberose, and rangoon creeper."
+      "description": "A rich white floral fragrance with jasmine, tuberose, and rangoon creeper.",
+      "status": "Active"
     },
     {
       "id": "4",
@@ -51,9 +54,12 @@
       "gender": "Men",
       "price": 450,
       "rating": 4.6,
-      "images": ["/productimage/eternille.jpg"],
+      "images": [
+        "/productimage/eternille.jpg"
+      ],
       "stock": 20,
-      "description": "Premium lightweight sport jacket for outdoor activities."
+      "description": "Premium lightweight sport jacket for outdoor activities.",
+      "status": "Active"
     },
     {
       "id": "5",
@@ -64,11 +70,11 @@
       "price": 590,
       "rating": 4.9,
       "images": [
-        "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTSwetCOg11aut6T-DxlEn83s90wnOOfgMCTtSAMDQGjJdO3IkkaDtaZxDHSndYxajOM3sAl4bvk5hq80Vxu_TSG0GxAOBzjiPJhKNCc0CL-1WcYzzyMN6c",
-        "/productimage/output (2).jpg"
+        "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTSwetCOg11aut6T-DxlEn83s90wnOOfgMCTtSAMDQGjJdO3IkkaDtaZxDHSndYxajOM3sAl4bvk5hq80Vxu_TSG0GxAOBzjiPJhKNCc0CL-1WcYzzyMN6c"
       ],
       "stock": 10,
-      "description": "Elegant silk scarf with signature LV monogram pattern."
+      "description": "Elegant silk scarf with signature LV monogram pattern.",
+      "status": "Low Stock"
     },
     {
       "id": "6",
@@ -78,7 +84,11 @@
       "gender": "Unisex",
       "price": 360,
       "rating": 4.7,
-      "images":["/productimage/saphira.jpg"]
+      "images": [
+        "/productimage/saphira.jpg"
+      ],
+      "stock": 10,
+      "status": "Low Stock"
     },
     {
       "id": "7",
@@ -89,11 +99,11 @@
       "price": 145,
       "rating": 4.8,
       "images": [
-        "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZGlvciUyMHNhdXZhZ2V8ZW58MHx8MHx8fDA%3D",
-        "https://api.deepai.org/job-view-file/e8985765-52fd-4ef4-8965-63f656258587/outputs/output.jpg"
+        "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZGlvciUyMHNhdXZhZ2V8ZW58MHx8MHx8fDA%3D"
       ],
       "stock": 35,
-      "description": "Fresh spicy fragrance with bergamot, ambroxan, and vanilla notes."
+      "description": "Fresh spicy fragrance with bergamot, ambroxan, and vanilla notes.",
+      "status": "Active"
     },
     {
       "id": "8",
@@ -107,7 +117,8 @@
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLTjwEAma1I46-av-QpJWloIpNieRTQApMLw&s"
       ],
       "stock": 40,
-      "description": "Addictive floral vanilla fragrance with coffee and white flowers."
+      "description": "Addictive floral vanilla fragrance with coffee and white flowers.",
+      "status": "Active"
     },
     {
       "id": "9",
@@ -121,7 +132,8 @@
         "https://images.unsplash.com/photo-1558038785-4fe65c791c99?w=294&dpr=2&h=294&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXRodW1ibmFpbHx8ODQyMTc3NHx8ZW58MHx8fHx8"
       ],
       "stock": 50,
-      "description": "Fresh aquatic fragrance inspired by the Mediterranean sea."
+      "description": "Fresh aquatic fragrance inspired by the Mediterranean sea.",
+      "status": "Active"
     },
     {
       "id": "10",
@@ -131,10 +143,12 @@
       "gender": "Women",
       "price": 135,
       "rating": 4.8,
-      "images": ["/productimage/output (2).jpg"
-       ],
+      "images": [
+        "/productimage/output (2).jpg"
+      ],
       "stock": 30,
-      "description": "Gourmand floral with iris, patchouli, and praline notes."
+      "description": "Gourmand floral with iris, patchouli, and praline notes.",
+      "status": "Active"
     },
     {
       "id": "11",
@@ -148,7 +162,8 @@
         "https://images.unsplash.com/photo-1557170334-a9632e77c6e4?w=294&dpr=2&h=294&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXRodW1ibmFpbHx8NDk2OTQyMnx8ZW58MHx8fHx8"
       ],
       "stock": 18,
-      "description": "Warm spicy fragrance with tobacco leaf, vanilla, and dried fruits."
+      "description": "Warm spicy fragrance with tobacco leaf, vanilla, and dried fruits.",
+      "status": "Low Stock"
     },
     {
       "id": "12",
@@ -159,11 +174,11 @@
       "price": 95,
       "rating": 4.5,
       "images": [
-        "/productimage/venora.jpg",
-        "https://images.unsplash.com/photo-1615634262411-2b5906c57e1d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9sY2UlMjBnYWJiYW5hJTIwbGlnaHQlMjBibHVlfGVufDB8fDB8fHww"
+        "/productimage/venora.jpg"
       ],
       "stock": 45,
-      "description": "Fresh citrus fragrance with apple, bamboo, and white rose."
+      "description": "Fresh citrus fragrance with apple, bamboo, and white rose.",
+      "status": "Active"
     },
     {
       "id": "13",
@@ -174,11 +189,11 @@
       "price": 105,
       "rating": 4.7,
       "images": [
-        "/productimage/noir.jpg",
-        "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlrdG9yJTIwcm9sZiUyMHNwaWNlYm9tYnxlbnwwfHwwfHx8MA%3D%3D"
+        "/productimage/noir.jpg"
       ],
       "stock": 25,
-      "description": "Explosive spicy fragrance with chili, saffron, and leather notes."
+      "description": "Explosive spicy fragrance with chili, saffron, and leather notes.",
+      "status": "Active"
     },
     {
       "id": "14",
@@ -190,9 +205,10 @@
       "rating": 4.8,
       "images": [
         "/productimage/venora.jpg"
-       ],
+      ],
       "stock": 38,
-      "description": "Explosion of floral notes with jasmine, rose, and patchouli."
+      "description": "Explosion of floral notes with jasmine, rose, and patchouli.",
+      "status": "Active"
     },
     {
       "id": "15",
@@ -206,7 +222,8 @@
         "/productimage/eternor.jpg"
       ],
       "stock": 55,
-      "description": "Luxurious amber fragrance with blood mandarin and mint."
+      "description": "Luxurious amber fragrance with blood mandarin and mint.",
+      "status": "Active"
     },
     {
       "id": "16",
@@ -217,11 +234,11 @@
       "price": 140,
       "rating": 4.7,
       "images": [
-        "/productimage/lumora.jpg",
-        "https://images.unsplash.com/photo-1615634262411-2b5906c57e1d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Z29vZCUyMGdpcmx8ZW58MHx8MHx8fDA%3D"
+        "/productimage/lumora.jpg"
       ],
       "stock": 32,
-      "description": "Seductive floral fragrance with jasmine, tonka bean, and cocoa."
+      "description": "Seductive floral fragrance with jasmine, tonka bean, and cocoa.",
+      "status": "Active"
     },
     {
       "id": "19",
@@ -232,11 +249,11 @@
       "price": 130,
       "rating": 4.6,
       "images": [
-        "/productimage/scandal1.jpg",
-        "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJhZGElMjBsaG9tbWV8ZW58MHx8MHx8fDA%3D"
+        "/productimage/scandal1.jpg"
       ],
       "stock": 28,
-      "description": "Sophisticated amber fragrance with neroli, ginger, and patchouli."
+      "description": "Sophisticated amber fragrance with neroli, ginger, and patchouli.",
+      "status": "Active"
     },
     {
       "id": "20",
@@ -247,11 +264,11 @@
       "price": 115,
       "rating": 4.7,
       "images": [
-        "/productimage/versace1.jpg",
         "/productimage/versace1.jpg"
       ],
       "stock": 22,
-      "description": "Sensual oriental fragrance with rose, vanilla, and blackcurrant."
+      "description": "Sensual oriental fragrance with rose, vanilla, and blackcurrant.",
+      "status": "Active"
     },
     {
       "id": "21",
@@ -262,11 +279,11 @@
       "price": 105,
       "rating": 4.6,
       "images": [
-        "/productimage/foog1.jpg",
-        "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9sY2UlMjBnYWJiYW5hJTIwdGhlJTIwb25lfGVufDB8fDB8fHww"
+        "/productimage/foog1.jpg"
       ],
       "stock": 33,
-      "description": "Warm oriental fragrance with ginger, amber, and tobacco."
+      "description": "Warm oriental fragrance with ginger, amber, and tobacco.",
+      "status": "Active"
     },
     {
       "id": "22",
@@ -277,11 +294,11 @@
       "price": 150,
       "rating": 4.8,
       "images": [
-        "/productimage/kenzo1.jpg",
-        "https://images.unsplash.com/photo-1615634262411-2b5906c57e1d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGlvciUyMGphZG9yZXxlbnwwfHwwfHx8MA%3D%3D"
+        "/productimage/kenzo1.jpg"
       ],
       "stock": 25,
-      "description": "Luxurious floral bouquet with ylang-ylang, rose, and jasmine."
+      "description": "Luxurious floral bouquet with ylang-ylang, rose, and jasmine.",
+      "status": "Active"
     },
     {
       "id": "23",
@@ -292,11 +309,11 @@
       "price": 75,
       "rating": 4.4,
       "images": [
-        "/productimage/output (1).jpg",
-        "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aHVnbyUyMGJvc3MlMjBib3R0bGVkfGVufDB8fDB8fHww"
+        "/productimage/output (1).jpg"
       ],
-      "stock": 60,
-      "description": "Classic masculine fragrance with apple, cinnamon, and sandalwood."
+      "stock": 18,
+      "description": "Classic masculine fragrance with apple, cinnamon, and sandalwood.",
+      "status": "Low Stock"
     },
     {
       "id": "24",
@@ -307,8 +324,7 @@
       "price": 125,
       "rating": 4.7,
       "images": [
-        "/productimage/gueri prem.jpg",
-        "https://images.unsplash.com/photo-1615634262411-2b5906c57e1d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bXVnbGVyJTIwYWxpZW58ZW58MHx8MHx8fDA%3D"
+        "/productimage/gueri prem.jpg"
       ],
       "stock": 0,
       "description": "Mysterious floral woody fragrance with jasmine and cashmeran.",
@@ -326,7 +342,8 @@
         "/productimage/output.jpg"
       ],
       "stock": 45,
-      "description": "Fresh marine fragrance with grapefruit, bay leaf, and ambergris."
+      "description": "Fresh marine fragrance with grapefruit, bay leaf, and ambergris.",
+      "status": "Active"
     },
     {
       "id": "26",
@@ -339,8 +356,20 @@
       "images": [
         "https://images.unsplash.com/photo-1566977776052-6e61e35bf9be?w=294&dpr=2&h=294&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXRodW1ibmFpbHx8NDU0NzE4Nnx8ZW58MHx8fHx8"
       ],
-      "stock": 30,
-      "description": "Modern chypre fragrance with cassis, rose, and woody notes."
+      "stock": 8,
+      "description": "Modern chypre fragrance with cassis, rose, and woody notes.",
+      "status": "Low Stock"
+    },
+    {
+      "id": "557f",
+      "name": "adidas",
+      "category": "indoor",
+      "price": 120,
+      "stock": 10,
+      "status": "Active",
+      "images": [
+        "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRObiSwmMSgRpdrJpwmJAbTh-4-HAGIusMeZO3g8Tl-Zy-3DPz9sgETJ_TLeMnQT-ib5noyzJ1Vuq-2vgjbUF6Zv-o4gbeTWUu69sO6IsG9Hl69IHkpn7CEc_8"
+      ]
     }
   ],
   "user": [
@@ -431,6 +460,15 @@
           "size": "50ml",
           "quantity": 1,
           "id": 1756474970722
+        },
+        {
+          "productId": "557f",
+          "name": "adidas",
+          "price": 120,
+          "image": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRObiSwmMSgRpdrJpwmJAbTh-4-HAGIusMeZO3g8Tl-Zy-3DPz9sgETJ_TLeMnQT-ib5noyzJ1Vuq-2vgjbUF6Zv-o4gbeTWUu69sO6IsG9Hl69IHkpn7CEc_8",
+          "size": "50ml",
+          "quantity": 1,
+          "id": 1756719425364
         }
       ],
       "orders": [],

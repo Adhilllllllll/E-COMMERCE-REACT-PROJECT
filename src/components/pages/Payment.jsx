@@ -7,8 +7,6 @@ import { userApi } from "../../Api";
 import { toast } from "react-toastify";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import Navbar from "./NavBar";
- 
 
 // ✅ Validation schema
 const validationSchema = Yup.object().shape({
@@ -26,9 +24,12 @@ const validationSchema = Yup.object().shape({
   paymentMethod: Yup.string().required("Select a payment method"),
   upiId: Yup.string().when("paymentMethod", {
     is: "upi",
-    then: Yup.string()
-      .required("UPI ID is required")
-      .matches(/^[\w.-]+@[\w.-]+$/, "Enter a valid UPI ID"),
+    then: (schema) =>
+      schema
+        .required("UPI ID is required")
+        // ✅ More flexible regex for UPI
+        .matches(/^[\w.\-]{2,256}@[a-zA-Z]{2,64}$/, "Enter a valid UPI ID"),
+    otherwise: (schema) => schema.notRequired(),
   }),
 });
 
@@ -61,13 +62,14 @@ const Payment = () => {
         status: "processing",
         shippingAddress: addressToUse,
         paymentMethod: values.paymentMethod,
+        upiId: values.paymentMethod === "upi" ? values.upiId : null,
       };
 
       const updatedUser = {
         ...loggedInUser,
         address: addressToUse,
         orders: [...(loggedInUser.orders || []), order],
-        cart: [], //  clear cart
+        cart: [], // clear cart
       };
 
       await axios.patch(`${userApi}/${updatedUser.id}`, updatedUser);
@@ -88,7 +90,6 @@ const Payment = () => {
   if (cart.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">Your cart is empty</h2>
           <button
@@ -103,9 +104,7 @@ const Payment = () => {
   }
 
   return (
- 
     <div className="min-h-screen bg-gray-50 py-12 mt-7 px-4 sm:px-6 lg:px-8">
-          
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
 

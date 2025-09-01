@@ -7,8 +7,6 @@ import {
   FiShoppingBag,
   FiPackage,
   FiLogOut,
-  FiBell,
-  FiChevronDown,
 } from "react-icons/fi";
 
 import Swal from "sweetalert2";
@@ -81,7 +79,7 @@ const AdminLayout = () => {
                     confirmButtonText: "Yes, Logout",
                   }).then((result) => {
                     if (result.isConfirmed) {
-                      logout(); // call your logout function
+                      logout();
                     }
                   });
                 }}
@@ -125,10 +123,6 @@ const AdminLayout = () => {
               </h1>
             </div>
             <div className="flex items-center">
-              {/* <button className="p-2 mr-4 text-gray-600 hover:text-gray-900 relative">
-                <FiBell />
-                <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-              </button> */}
               <div className="flex items-center">
                 <img
                   className="h-8 w-8 rounded-full object-cover"
@@ -138,7 +132,6 @@ const AdminLayout = () => {
                 <span className="ml-2 text-sm font-medium hidden md:inline">
                   Admin User
                 </span>
-                {/* <FiChevronDown className="ml-1 text-gray-600" /> */}
               </div>
             </div>
           </div>
