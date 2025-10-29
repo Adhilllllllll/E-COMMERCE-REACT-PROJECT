@@ -55,12 +55,11 @@ export default function LoginPage() {
       <div className="w-full max-w-md bg-white/95 backdrop-blur shadow-2xl rounded-2xl p-8">
         {/* Logo & Title */}
         <div className="sm:mx-auto sm:w-full sm:max-w-sm text-center">
-          
           <h2 className="mt-6 text-3xl font-extrabold tracking-tight text-gray-900 font-serif">
             Welcome Back
           </h2>
           <p className="mt-2 text-sm text-gray-600 italic">
-            Luxury Perfume Store 
+            Luxury Perfume Store
           </p>
         </div>
 
@@ -93,12 +92,12 @@ export default function LoginPage() {
               >
                 Password
               </label>
-              <a
-                href="#"
+              <Link
+                to="/forget-password"
                 className="text-sm font-semibold text-purple-700 hover:text-purple-600"
               >
                 Forgot password?
-              </a>
+              </Link>
             </div>
             <input
               id="password"

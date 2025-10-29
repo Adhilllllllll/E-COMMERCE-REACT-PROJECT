@@ -6,7 +6,7 @@ import {
   FiArrowUp,
   FiArrowDown,
 } from "react-icons/fi";
-import { productAPI, userApi } from "../../Api";
+import { productAPI, userApi } from "../../api/Api";
 
 const Dashboard = () => {
   return (

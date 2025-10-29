@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { createContext, useState } from "react";
-import { userApi } from "../Api";
+import { userApi } from "../api/Api";
 
 export const OrderContext = createContext();
 

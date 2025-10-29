@@ -3,6 +3,8 @@ import HomePage from "./components/nonAuth/HomePage";
 import LoginPage from "./components/auth/LoginPage";
 import RegisterPage from "./components/auth/RegisterPage";
 import ShoppingPage from "./components/nonAuth/ShoppingPage";
+import ForgotPasswordPage from "./components/auth/ForgotPasswordPage ";
+import ResetPasswordPage from "./components/auth/ResetPasswordPage ";
 import Cart from "./components/pages/Cart";
 import ProductDetails from "./components/nonAuth/ProductDetails";
 import Payment from "./components/pages/Payment";
@@ -42,6 +44,8 @@ const AppRoutes = () => {
       {/* Auth Routes (outside layout) */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+       <Route path="/forget-password" element={<ForgotPasswordPage />} />
+      <Route path="/resetPassword/:token" element={<ResetPasswordPage />} />
 
       {/* Admin Layout with Protected Routes */}
       <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>

@@ -1,65 +1,64 @@
 import axios from "axios";
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState, useContext } from "react";
 import { toast } from "react-toastify";
-import { userApi } from "../Api";
+import { AuthContext } from "./AuthProvider";
+import { userApi } from "../api/Api";
 
 export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  const [users, setUsers] = useState();
+  const { loggedInUser } = useContext(AuthContext);
+  const [users, setUsers] = useState([]);
 
-  // fetching all users
   const fetchUsers = async () => {
+    if (!loggedInUser?.token) return;
     try {
-      const { data } = await axios.get(userApi);
+      const { data } = await axios.get(userApi, {
+        headers: { Authorization: `Bearer ${loggedInUser.token}` },
+      });
       setUsers(data);
     } catch (error) {
-      console.error("error fetching users:", error);
+      console.error("Error fetching users:", error.message);
     }
   };
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [loggedInUser?.token]);
 
-  // block and unblock users
   const toggleBlockUser = async (id) => {
+    if (!loggedInUser?.token) return;
     try {
       const user = users.find((u) => u.id === id);
       if (!user) return;
 
-      const updateUser = { ...user, isBlock: !user.isBlock };
-      await axios.put(`${userApi}/${id}`, updateUser);
+      const updatedUser = { ...user, isBlock: !user.isBlock };
+      await axios.put(`${userApi}/${id}`, updatedUser, {
+        headers: { Authorization: `Bearer ${loggedInUser.token}` },
+      });
 
-      setUsers(users.map((u) => (u.id === id ? updateUser : u)));
-      toast.success(`User ${updateUser.isBlock ? "blocked" : "unblocked"}`);
+      setUsers(users.map((u) => (u.id === id ? updatedUser : u)));
+      toast.success(`User ${updatedUser.isBlock ? "blocked" : "unblocked"}`);
     } catch (error) {
-      console.error("Error toggling User:", error);
       toast.error("Failed to update user");
     }
   };
 
-  // delete user
   const deleteUser = async (id) => {
+    if (!loggedInUser?.token) return;
     try {
-      await axios.delete(`${userApi}/${id}`);
+      await axios.delete(`${userApi}/${id}`, {
+        headers: { Authorization: `Bearer ${loggedInUser.token}` },
+      });
       setUsers(users.filter((u) => u.id !== id));
       toast.success("User deleted");
     } catch (error) {
-      console.error("Error deleting User:", error);
       toast.error("Failed to delete user");
     }
   };
 
   return (
-    <UserContext.Provider
-      value={{
-        users,
-        fetchUsers,
-        toggleBlockUser,
-        deleteUser,
-      }}
-    >
+    <UserContext.Provider value={{ users, fetchUsers, toggleBlockUser, deleteUser }}>
       {children}
     </UserContext.Provider>
   );

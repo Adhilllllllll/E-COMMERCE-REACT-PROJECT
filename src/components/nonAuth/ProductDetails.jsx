@@ -10,7 +10,7 @@ const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { products } = useContext(ProductContext);
+  const { products, loading } = useContext(ProductContext);
   const { addToCart } = useContext(CartContext);
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { loggedInUser } = useContext(AuthContext);
@@ -18,14 +18,15 @@ const ProductDetails = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [product, setProduct] = useState(null);
 
+  // Set product based on URL param
   useEffect(() => {
     if (products.length > 0) {
-      const found = products.find((p) => Number(p.id) === Number(id));
+      const found = products.find((p) => p._id === id);
       setProduct(found || null);
     }
   }, [products, id]);
 
-  if (!products || products.length === 0) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-gray-700 text-lg">Loading product...</p>
@@ -37,7 +38,9 @@ const ProductDetails = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-medium text-gray-800">Product not found</h2>
+          <h2 className="text-2xl font-medium text-gray-800">
+            Product not found
+          </h2>
           <button
             onClick={() => navigate(-1)}
             className="mt-4 px-4 py-2 bg-gray-900 text-white rounded-lg"
@@ -61,13 +64,17 @@ const ProductDetails = () => {
       navigate("/login");
       return;
     }
-    toggleWishlist(product.id);
-    toast.success(isInWishlist(product.id) ? "Removed from wishlist" : "Added to wishlist");
+    toggleWishlist(product._id);
+    toast.success(
+      isInWishlist(product._id) ? "Removed from wishlist" : "Added to wishlist"
+    );
   };
 
   const renderRating = (rating) =>
     [...Array(5)].map((_, i) => (
-      <span key={i} className={i < rating ? "text-amber-400" : "text-gray-300"}>★</span>
+      <span key={i} className={i < rating ? "text-amber-400" : "text-gray-300"}>
+        ★
+      </span>
     ));
 
   const HeartIcon = ({ filled }) => (
@@ -77,7 +84,9 @@ const ProductDetails = () => {
       fill={filled ? "currentColor" : "none"}
       stroke="currentColor"
       strokeWidth="1.5"
-      className={`h-6 w-6 ${filled ? "text-rose-500" : "text-gray-400 hover:text-rose-400"}`}
+      className={`h-6 w-6 ${
+        filled ? "text-rose-500" : "text-gray-400 hover:text-rose-400"
+      }`}
     >
       <path
         strokeLinecap="round"
@@ -94,8 +103,18 @@ const ProductDetails = () => {
           onClick={() => navigate(-1)}
           className="mb-6 flex items-center text-gray-600 hover:text-gray-900"
         >
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          <svg
+            className="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
           </svg>
           Back to Products
         </button>
@@ -104,14 +123,18 @@ const ProductDetails = () => {
           {/* Images */}
           <div>
             <div className="bg-white rounded-lg overflow-hidden mb-4 h-96 flex items-center justify-center">
-              {product.images?.[selectedImage] ? (
+              {product.images?.length > 0 ? (
                 <img
                   src={product.images[selectedImage]}
                   alt={product.name}
                   className="w-full h-full object-contain"
                 />
               ) : (
-                <div className="text-gray-300">No Image</div>
+                <img
+                  src={product.image} // fallback to single image
+                  alt={product.name}
+                  className="w-full h-full object-contain"
+                />
               )}
             </div>
             {product.images?.length > 1 && (
@@ -121,7 +144,9 @@ const ProductDetails = () => {
                     key={index}
                     onClick={() => setSelectedImage(index)}
                     className={`bg-white rounded border p-1 h-20 flex items-center justify-center ${
-                      selectedImage === index ? "border-amber-400" : "border-gray-200"
+                      selectedImage === index
+                        ? "border-amber-400"
+                        : "border-gray-200"
                     }`}
                   >
                     <img src={img} alt="" className="h-full object-contain" />
@@ -134,15 +159,22 @@ const ProductDetails = () => {
           {/* Info */}
           <div>
             <div className="flex justify-between items-start mb-4">
-              <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
-              <button onClick={handleWishlistClick} className="p-2 rounded-full hover:bg-gray-100">
-                <HeartIcon filled={isInWishlist(product.id)} />
+              <h1 className="text-3xl font-bold text-gray-900">
+                {product.name}
+              </h1>
+              <button
+                onClick={handleWishlistClick}
+                className="p-2 rounded-full hover:bg-gray-100"
+              >
+                <HeartIcon filled={isInWishlist(product._id)} />
               </button>
             </div>
 
             <p className="text-gray-700 mb-2">{product.description}</p>
             <p className="text-xl font-semibold mb-2">${product.price}</p>
-            <div className="mb-4">{renderRating(Math.round(product.rating))}</div>
+            <div className="mb-4">
+              {renderRating(Math.round(product.rating))}
+            </div>
 
             <button
               onClick={handleCartClick}
@@ -153,6 +185,7 @@ const ProductDetails = () => {
           </div>
         </div>
       </div>
+      
     </div>
   );
 };
