@@ -21,7 +21,7 @@ const ProductDetails = () => {
   // Set product based on URL param
   useEffect(() => {
     if (products.length > 0) {
-      const found = products.find((p) => p._id === id);
+      const found = products.find((p) => p.id === id); // use id from ProductProvider
       setProduct(found || null);
     }
   }, [products, id]);
@@ -64,9 +64,9 @@ const ProductDetails = () => {
       navigate("/login");
       return;
     }
-    toggleWishlist(product._id);
+    toggleWishlist(product.id);
     toast.success(
-      isInWishlist(product._id) ? "Removed from wishlist" : "Added to wishlist"
+      isInWishlist(product.id) ? "Removed from wishlist" : "Added to wishlist"
     );
   };
 
@@ -131,7 +131,7 @@ const ProductDetails = () => {
                 />
               ) : (
                 <img
-                  src={product.image} // fallback to single image
+                  src={product.image?.[0] || ""} // fallback
                   alt={product.name}
                   className="w-full h-full object-contain"
                 />
@@ -166,7 +166,7 @@ const ProductDetails = () => {
                 onClick={handleWishlistClick}
                 className="p-2 rounded-full hover:bg-gray-100"
               >
-                <HeartIcon filled={isInWishlist(product._id)} />
+                <HeartIcon filled={isInWishlist(product.id)} />
               </button>
             </div>
 
@@ -185,7 +185,6 @@ const ProductDetails = () => {
           </div>
         </div>
       </div>
-      
     </div>
   );
 };

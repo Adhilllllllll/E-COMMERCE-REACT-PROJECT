@@ -1,13 +1,14 @@
-// src/components/auth/ProtectedRoute.js
 import React, { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { AuthContext } from "./context/AuthProvider";
 import Swal from "sweetalert2";
 
 const ProtectedRoute = ({ allowedRoles }) => {
-  const { loggedInUser } = useContext(AuthContext);
+  const { loggedInUser, loading } = useContext(AuthContext);
 
-  // Guest trying to access protected route
+  if (loading) return <div>Loading...</div>;
+
+  // Guest access
   if (!loggedInUser) {
     Swal.fire({
       icon: "warning",
@@ -17,12 +18,14 @@ const ProtectedRoute = ({ allowedRoles }) => {
     }).then(() => {
       window.location.href = "/login";
     });
-    return null; // prevent rendering
+    return null;
   }
 
-  // Role check
-  if (!allowedRoles.includes(loggedInUser.role)) {
-    return <Navigate to="*" replace />;
+  // Role-based access
+  const userRole = loggedInUser?.role;
+
+  if (allowedRoles && !allowedRoles.includes(userRole)) {
+    return <Navigate to="/unauthorized" replace />;
   }
 
   return <Outlet />;

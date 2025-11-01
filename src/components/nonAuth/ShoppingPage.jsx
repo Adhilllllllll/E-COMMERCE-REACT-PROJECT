@@ -8,8 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const ShoppingPage = () => {
-  const { filteredProducts, filterProduct, productSearch, setPsearch } =
-    useContext(ProductContext);
+ const { filteredProducts, filterProduct, productSearch, setProductSearch } = useContext(ProductContext);
   const { cart, addToCart } = useContext(CartContext);
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { loggedInUser } = useContext(AuthContext);
@@ -60,7 +59,7 @@ const ShoppingPage = () => {
     });
   };
 
-  const isInCart = (productId) => cart.some((item) => item.productId === productId);
+const isInCart = (productId) => cart.some((item) => item.productId?._id === productId);
 
   const renderRating = (rating = 0) =>
     [...Array(5)].map((_, i) => (
@@ -110,7 +109,7 @@ const ShoppingPage = () => {
               type="text"
               placeholder="Search products..."
               value={productSearch}
-              onChange={(e) => setPsearch(e.target.value)}
+              onChange={(e) => setProductSearch(e.target.value)}
               className="w-full pl-10 pr-4 py-2 rounded-lg shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors duration-200"
             />
             <span className="absolute left-3 top-2.5 text-gray-400">🔍</span>

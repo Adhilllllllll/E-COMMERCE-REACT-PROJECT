@@ -7,8 +7,10 @@ import CartProvider from "./context/CartProvider";
 import WishlistProvider from "./context/WishListProvider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import UserProvider from "./context/UserProvider";
+import {UserProvider} from "./context/UserProvider";
 import OrderProvider from "./context/OrderProvider";
+ 
+
 
 const App = () => {
   return (

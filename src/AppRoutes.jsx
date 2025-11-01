@@ -12,6 +12,7 @@ import Order from "./components/pages/Order";
 import OrderHistory from "./components/pages/OrderHistory";
 import Wishlist from "./components/pages/Wishlist";
 import Error404 from "./admin/pages/Error404";
+import Unauthorized from "./components/Unauthorized"; // NEW
 
 import AdminLayout from "./admin/pages/AdminLayout";
 import Dashboard from "./admin/pages/Dashboard";
@@ -25,7 +26,7 @@ import ProtectedRoute from "./ProtectedRoute";
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Customer Layout with Nested Routes */}
+      {/* Customer Layout */}
       <Route path="/" element={<CustomerLayout />}>
         <Route index element={<HomePage />} />
         <Route path="shop" element={<ShoppingPage />} />
@@ -41,13 +42,13 @@ const AppRoutes = () => {
         </Route>
       </Route>
 
-      {/* Auth Routes (outside layout) */}
+      {/* Auth Routes */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
-       <Route path="/forget-password" element={<ForgotPasswordPage />} />
+      <Route path="/forget-password" element={<ForgotPasswordPage />} />
       <Route path="/resetPassword/:token" element={<ResetPasswordPage />} />
 
-      {/* Admin Layout with Protected Routes */}
+      {/* Admin Layout */}
       <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
@@ -56,6 +57,9 @@ const AppRoutes = () => {
           <Route path="orders" element={<OrderManagement />} />
         </Route>
       </Route>
+
+      {/* Unauthorized Route */}
+      <Route path="/unauthorized" element={<Unauthorized />} />
 
       {/* Fallback */}
       <Route path="*" element={<Error404 />} />

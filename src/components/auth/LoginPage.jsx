@@ -3,34 +3,19 @@ import { AuthContext } from "../../context/AuthProvider";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
-  const { loggedInUser, login } = useContext(AuthContext);
+  const { loggedInUser, loading, login } = useContext(AuthContext);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-  const [checkingAuth, setCheckingAuth] = useState(true);
   const navigate = useNavigate();
 
+  // Redirect if user is already logged in
   useEffect(() => {
-    if (loggedInUser) {
-      if (loggedInUser.role?.toLowerCase().trim() === "admin") {
-        navigate("/admin", { replace: true });
-      } else {
-        navigate("/", { replace: true });
-      }
-      return;
+    if (!loading && loggedInUser) {
+      navigate(
+        loggedInUser.role?.toLowerCase().trim() === "admin" ? "/admin" : "/",
+        { replace: true }
+      );
     }
-
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      if (parsedUser.role?.toLowerCase().trim() === "admin") {
-        navigate("/admin", { replace: true });
-      } else {
-        navigate("/", { replace: true });
-      }
-      return;
-    }
-
-    setCheckingAuth(false);
-  }, [loggedInUser, navigate]);
+  }, [loggedInUser, loading, navigate]);
 
   const handleChange = (event) => {
     setLoginData({ ...loginData, [event.target.name]: event.target.value });
@@ -39,10 +24,10 @@ export default function LoginPage() {
   const handleLogin = (event) => {
     event.preventDefault();
     login(loginData.email, loginData.password);
-    console.log("Login attempt:", loginData);
   };
 
-  if (checkingAuth) {
+  if (loading) {
+    // Show this while AuthProvider is checking cookie / user
     return (
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-indigo-950 via-purple-900 to-purple-700">
         <p className="text-white">Checking authentication...</p>
@@ -58,18 +43,13 @@ export default function LoginPage() {
           <h2 className="mt-6 text-3xl font-extrabold tracking-tight text-gray-900 font-serif">
             Welcome Back
           </h2>
-          <p className="mt-2 text-sm text-gray-600 italic">
-            Luxury Perfume Store
-          </p>
+          <p className="mt-2 text-sm text-gray-600 italic">Luxury Perfume Store</p>
         </div>
 
         {/* Form */}
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-800"
-            >
+            <label htmlFor="email" className="block text-sm font-medium text-gray-800">
               Email address
             </label>
             <input
@@ -86,10 +66,7 @@ export default function LoginPage() {
 
           <div>
             <div className="flex items-center justify-between">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-800"
-              >
+              <label htmlFor="password" className="block text-sm font-medium text-gray-800">
                 Password
               </label>
               <Link
@@ -121,10 +98,7 @@ export default function LoginPage() {
           </div>
 
           <div className="text-center">
-            <Link
-              to="/register"
-              className="mt-4 text-sm font-medium text-indigo-500 hover:underline"
-            >
+            <Link to="/register" className="mt-4 text-sm font-medium text-indigo-500 hover:underline">
               New to our store? Register your account
             </Link>
           </div>
