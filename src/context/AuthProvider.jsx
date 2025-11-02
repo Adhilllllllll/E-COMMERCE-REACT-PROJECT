@@ -14,7 +14,7 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await api.get("/users/me");
+        const res = await api.get("/users/me", { withCredentials: true });
         const user = res.data.data;
 
         // Normalize role: user -> customer
@@ -48,10 +48,10 @@ const AuthProvider = ({ children }) => {
   // 🔹 LOGIN
   const login = async (email, password) => {
     try {
-      const res = await api.post("/auth/login", { email, password });
+      const res = await api.post("/auth/login", { email, password }, { withCredentials: true });
 
       if (res.data.status === "success") {
-        const user = res.data.user;
+        const user = res.data.data.user;
 
         if (!user) throw new Error("Invalid login response");
 

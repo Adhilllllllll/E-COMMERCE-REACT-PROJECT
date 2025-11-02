@@ -298,9 +298,6 @@
 
 // export default ProductProvider;
 
-
-
-
 import React, { createContext, useEffect, useState, useContext } from "react";
 import { UserContext } from "./UserProvider";
 import api from "../api/Api";
@@ -309,10 +306,18 @@ export const ProductContext = createContext();
 
 const ProductProvider = ({ children }) => {
   const { loggedInUser } = useContext(UserContext);
+
+  // All products from API
   const [products, setProducts] = useState([]);
+  // Filtered products for display
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  // Search text
+  const [productSearch, setProductSearch] = useState("");
+  // Selected category filter
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [loading, setLoading] = useState(false);
 
-  // Fetch all products
+  // Fetch all products from backend
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -331,6 +336,32 @@ const ProductProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+  // Filter products based on category & search
+  const filterProduct = (category = selectedCategory) => {
+    setSelectedCategory(category);
+
+    let filtered = [...products];
+
+    // Category filter
+    if (category !== "all") {
+      filtered = filtered.filter((p) => p.category === category);
+    }
+
+    // Search filter
+    if (productSearch.trim() !== "") {
+      filtered = filtered.filter((p) =>
+        p.name.toLowerCase().includes(productSearch.toLowerCase())
+      );
+    }
+
+    setFilteredProducts(filtered);
+  };
+
+  // Update filteredProducts whenever products, search, or category changes
+  useEffect(() => {
+    filterProduct(selectedCategory);
+  }, [products, productSearch, selectedCategory]);
 
   // Upload image to Cloudinary
   const uploadImage = async (file) => {
@@ -420,6 +451,12 @@ const ProductProvider = ({ children }) => {
     <ProductContext.Provider
       value={{
         products,
+        filteredProducts,
+        filterProduct,
+        productSearch,
+        setProductSearch,
+        selectedCategory,
+        setSelectedCategory,
         loading,
         fetchProducts,
         addProduct,

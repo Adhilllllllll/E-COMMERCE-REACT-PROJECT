@@ -38,14 +38,14 @@ const UserManagement = () => {
                         : "bg-green-100 text-green-800"
                     }`}
                   >
-                    {u.isBlock ? "Blocked" : "Active"}
+                    {u.isBlocked ? "Blocked" : "Active"}
                   </span>
                 </td>
                 <td className="px-4 py-3 space-x-3">
                   <button
                     onClick={() => toggleBlockUser(u._id)}
                     className={`${
-                      u.isBlock ? "text-green-600" : "text-yellow-600"
+                      u.isBlocked ? "text-green-600" : "text-yellow-600"
                     } hover:underline`}
                   >
                     {u.isBlocked ? "Unblock" : "Block"}

@@ -118,7 +118,7 @@ const isInCart = (productId) => cart.some((item) => item.productId?._id === prod
 
         {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {filteredProducts.slice().reverse().map((product) => (
+          {(filteredProducts || []).slice().reverse().map((product) =>  (
             <motion.div
               key={product.id}
               whileHover={{ y: -8 }}
