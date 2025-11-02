@@ -19,12 +19,30 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
 
   // Set product based on URL param
-  useEffect(() => {
-    if (products.length > 0) {
-      const found = products.find((p) => p.id === id); // use id from ProductProvider
-      setProduct(found || null);
-    }
-  }, [products, id]);
+ useEffect(() => {
+  if (products.length > 0) {
+    // Use products from ProductProvider if available
+    const found = products.find((p) => p.id === id);
+    setProduct(found || null);
+  } else {
+    // Fallback: fetch single product directly from backend
+    const fetchSingleProduct = async () => {
+      try {
+        const { data } = await api.get(`/products/${id}`);
+        const prod = {
+          ...data.data,
+          id: data.data._id,
+          images: Array.isArray(data.data.image) ? data.data.image : [data.data.image],
+        };
+        setProduct(prod);
+      } catch (err) {
+        console.error(err.response?.data || err.message);
+      }
+    };
+    fetchSingleProduct();
+  }
+}, [products, id]);
+
 
   if (loading) {
     return (

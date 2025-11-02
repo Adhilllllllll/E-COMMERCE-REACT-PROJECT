@@ -25,7 +25,7 @@ const UserManagement = () => {
           </thead>
           <tbody className="divide-y divide-gray-200">
             {users.map((u) => (
-              <tr key={u.id}>
+              <tr key={u._id}>
                 <td className="px-4 py-3">{u.name}</td>
                 <td className="px-4 py-3">{u.email}</td>
                 <td className="px-4 py-3">{u.role}</td>
@@ -43,12 +43,12 @@ const UserManagement = () => {
                 </td>
                 <td className="px-4 py-3 space-x-3">
                   <button
-                    onClick={() => toggleBlockUser(u.id)}
+                    onClick={() => toggleBlockUser(u._id)}
                     className={`${
                       u.isBlock ? "text-green-600" : "text-yellow-600"
                     } hover:underline`}
                   >
-                    {u.isBlock ? "Unblock" : "Block"}
+                    {u.isBlocked ? "Unblock" : "Block"}
                   </button>
 
                   <button
@@ -63,7 +63,7 @@ const UserManagement = () => {
                         confirmButtonText: "Yes, delete it!",
                       }).then((result) => {
                         if (result.isConfirmed) {
-                          deleteUser(u.id);
+                          deleteUser(u._id);
                           Swal.fire(
                             "Deleted!",
                             "User has been deleted.",

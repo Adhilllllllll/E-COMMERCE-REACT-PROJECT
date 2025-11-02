@@ -1,6 +1,6 @@
-import axios from "axios";
+// OrderProvider.jsx
 import React, { createContext, useState } from "react";
-// import { userApi } from "../api/api";
+import api from "../api/Api"; // centralized axios instance
 
 export const OrderContext = createContext();
 
@@ -10,12 +10,15 @@ export default function OrderProvider({ children }) {
   // Fetch all orders from all users
   async function fetchOrders() {
     try {
-      const res = await axios.get(userApi);
+      // Fetch all users from backend
+      const res = await api.get("/users"); // GET /users
+      const users = res.data.data || [];
 
-      const allOrders = res.data.flatMap((user) =>
+      // Flatten all orders with user info
+      const allOrders = users.flatMap((user) =>
         (user.orders || []).map((order) => ({
           ...order,
-          userId: user.id,
+          userId: user._id,
           userName: user.name,
           userEmail: user.email,
         }))
@@ -23,31 +26,31 @@ export default function OrderProvider({ children }) {
 
       setOrders(allOrders);
     } catch (error) {
-      console.error("Failed to load orders:", error);
+      console.error("Failed to load orders:", error.response?.data || error.message);
     }
   }
 
-  // Update order status
+  // Update order status for a specific user's order
   async function setOrderStatus(userId, orderId, newStatus) {
     try {
-      const res = await axios.get(`${userApi}/${userId}`);
-      const user = res.data;
+      // Get the user by ID
+      const res = await api.get(`/users/${userId}`);
+      const user = res.data.data;
 
       // Update the orders array for this user
       const updatedOrders = (user.orders || []).map((order) =>
-        order.id === orderId ? { ...order, status: newStatus } : order
+        order._id === orderId ? { ...order, status: newStatus } : order
       );
 
-      await axios.patch(`${userApi}/${userId}`, {
-        orders: updatedOrders,
-      });
+      // Send patch request to update user's orders
+      await api.patch(`/users/${userId}`, { orders: updatedOrders });
 
       console.log(`Order ${orderId} status updated to ${newStatus}`);
 
-      // Refresh state so UI updates
+      // Refresh orders state
       fetchOrders();
     } catch (err) {
-      console.error("Failed to update order status:", err);
+      console.error("Failed to update order status:", err.response?.data || err.message);
     }
   }
 
