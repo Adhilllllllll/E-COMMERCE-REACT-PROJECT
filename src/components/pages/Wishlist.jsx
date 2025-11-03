@@ -202,7 +202,7 @@ const Wishlist = () => {
           </h2>
           <p className="text-gray-600 mb-6">Start adding items you love!</p>
           <button
-            onClick={() => navigate("/shopping")}
+            onClick={() => navigate("/shop")}
             className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
           >
             Continue Shopping
