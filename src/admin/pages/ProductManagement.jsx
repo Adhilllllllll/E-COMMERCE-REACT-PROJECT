@@ -7,8 +7,9 @@ const defaultForm = {
   category: "",
   price: "",
   count: 0,
-  isActive: true,
+  isActive: true,       // status field
   image: null,
+  description: "",      // description field
 };
 
 const ProductManagement = () => {
@@ -21,11 +22,21 @@ const ProductManagement = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
 
+  // Open form for adding or editing product
   const openForm = (product = null) => {
     setEditingProduct(product);
-    setFormData(product || defaultForm);
+    if (product) {
+      // Ensure isActive is boolean
+      setFormData({
+        ...product,
+        isActive: !!product.isActive,
+      });
+      setPreviewImage(product.image || null);
+    } else {
+      setFormData(defaultForm);
+      setPreviewImage(null);
+    }
     setSelectedFile(null);
-    setPreviewImage(product?.image || null);
     setShowForm(true);
   };
 
@@ -79,13 +90,20 @@ const ProductManagement = () => {
       <table className="min-w-full divide-y divide-gray-200 mb-6">
         <thead>
           <tr>
-            {["Image", "Name", "Category", "Price", "Stock", "Status", "Actions"].map(
-              (col) => (
-                <th key={col} className="px-4 py-2">
-                  {col}
-                </th>
-              )
-            )}
+            {[
+              "Image",
+              "Name",
+              "Category",
+              "Description",
+              "Price",
+              "Stock",
+              "Status",
+              "Actions",
+            ].map((col) => (
+              <th key={col} className="px-4 py-2">
+                {col}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -100,6 +118,7 @@ const ProductManagement = () => {
               </td>
               <td>{p.name}</td>
               <td>{p.category}</td>
+              <td>{p.description}</td>
               <td>${p.price}</td>
               <td>{p.count}</td>
               <td>{p.isActive ? "Active" : "Inactive"}</td>
@@ -156,6 +175,15 @@ const ProductManagement = () => {
                 className="w-full border p-2 rounded"
                 required
               />
+              <textarea
+                placeholder="Description"
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
+                className="w-full border p-2 rounded"
+                rows={3}
+              />
               <input
                 type="number"
                 placeholder="Price"
@@ -175,6 +203,19 @@ const ProductManagement = () => {
                 }
                 className="w-full border p-2 rounded"
               />
+              <select
+                value={formData.isActive ? "Active" : "Inactive"}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    isActive: e.target.value === "Active",
+                  })
+                }
+                className="w-full border p-2 rounded"
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
               <input type="file" accept="image/*" onChange={handleFileChange} />
 
               {previewImage && (
