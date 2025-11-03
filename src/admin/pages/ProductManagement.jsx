@@ -8,42 +8,35 @@ const defaultForm = {
   price: "",
   count: 0,
   isActive: true,
-  images: [],
+  image: null,
 };
 
 const ProductManagement = () => {
   const { products, addProduct, editProduct, deleteProduct } =
     useContext(ProductContext);
+
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [formData, setFormData] = useState(defaultForm);
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [previewImages, setPreviewImages] = useState([]);
-  const [existingImages, setExistingImages] = useState([]);
-  
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+
   const openForm = (product = null) => {
     setEditingProduct(product);
     setFormData(product || defaultForm);
-    setSelectedFiles([]);
-    setExistingImages(product?.images || []);
-    setPreviewImages(product?.images || []);
+    setSelectedFile(null);
+    setPreviewImage(product?.image || null);
     setShowForm(true);
   };
 
   const handleFileChange = (e) => {
-    const files = Array.from(e.target.files);
-    setSelectedFiles(files);
-
-    // Generate temporary preview URLs
-    const newPreviews = files.map((file) => URL.createObjectURL(file));
-
-    // Combine existing images with newly selected files
-    setPreviewImages([...existingImages, ...newPreviews]);
+    const file = e.target.files[0];
+    setSelectedFile(file);
+    setPreviewImage(file ? URL.createObjectURL(file) : null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!formData.name || !formData.category || !formData.price) {
       alert("Please fill all required fields.");
       return;
@@ -57,31 +50,22 @@ const ProductManagement = () => {
 
     try {
       if (editingProduct) {
-        // Pass existingImages so backend keeps them
-        await editProduct(
-          editingProduct.id,
-          normalizedData,
-          selectedFiles,
-          existingImages
-        );
+        await editProduct(editingProduct.id, normalizedData, selectedFile);
       } else {
-        await addProduct(normalizedData, selectedFiles);
+        await addProduct(normalizedData, selectedFile);
       }
     } catch (err) {
       console.error("Error submitting product:", err);
     }
 
-    // Reset form state
     setShowForm(false);
     setFormData(defaultForm);
-    setSelectedFiles([]);
-    setPreviewImages([]);
-    setExistingImages([]);
+    setSelectedFile(null);
+    setPreviewImage(null);
   };
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold">Product Management</h2>
         <button
@@ -92,23 +76,16 @@ const ProductManagement = () => {
         </button>
       </div>
 
-      {/* Products Table */}
       <table className="min-w-full divide-y divide-gray-200 mb-6">
         <thead>
           <tr>
-            {[
-              "Images",
-              "Name",
-              "Category",
-              "Price",
-              "Stock",
-              "Status",
-              "Actions",
-            ].map((col) => (
-              <th key={col} className="px-4 py-2">
-                {col}
-              </th>
-            ))}
+            {["Image", "Name", "Category", "Price", "Stock", "Status", "Actions"].map(
+              (col) => (
+                <th key={col} className="px-4 py-2">
+                  {col}
+                </th>
+              )
+            )}
           </tr>
         </thead>
         <tbody>
@@ -116,7 +93,7 @@ const ProductManagement = () => {
             <tr key={p.id}>
               <td className="px-4 py-2">
                 <img
-                  src={Array.isArray(p.images) ? p.images[0] : p.images}
+                  src={p.image}
                   alt={p.name}
                   className="w-12 h-12 object-cover rounded"
                 />
@@ -124,8 +101,8 @@ const ProductManagement = () => {
               <td>{p.name}</td>
               <td>{p.category}</td>
               <td>${p.price}</td>
-              <td>{p.stock}</td>
-              <td>{p.status}</td>
+              <td>{p.count}</td>
+              <td>{p.isActive ? "Active" : "Inactive"}</td>
               <td className="flex gap-2">
                 <button onClick={() => openForm(p)} className="text-blue-600">
                   Edit
@@ -152,7 +129,6 @@ const ProductManagement = () => {
         </tbody>
       </table>
 
-      {/* Modal Form */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-lg">
@@ -198,52 +174,34 @@ const ProductManagement = () => {
                   setFormData({ ...formData, count: e.target.value })
                 }
                 className="w-full border p-2 rounded"
-                required
               />
+              <input type="file" accept="image/*" onChange={handleFileChange} />
 
-              {/* Image Upload & Preview */}
-              <div className="w-full">
-                <label className="block mb-1 font-medium">Images</label>
-                <input
-                  type="file"
-                  multiple
-                  onChange={handleFileChange}
-                  className="w-full border p-2 rounded"
-                />
-                <div className="flex gap-2 mt-2">
-                  {previewImages.map((img, i) => (
-                    <img
-                      key={i}
-                      src={img}
-                      alt={`preview-${i}`}
-                      className="w-16 h-16 object-cover rounded border"
-                    />
-                  ))}
+              {previewImage && (
+                <div className="mt-2 relative w-32 h-32">
+                  <img
+                    src={previewImage}
+                    alt="preview"
+                    className="w-full h-full object-cover rounded"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedFile(null);
+                      setPreviewImage(null);
+                    }}
+                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                  >
+                    &times;
+                  </button>
                 </div>
-              </div>
+              )}
 
-              {/* Status */}
-              <label>Status</label>
-              <select
-                value={formData.isActive}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    isActive: e.target.value === "true",
-                  })
-                }
-                className="w-full border p-2 rounded"
-              >
-                <option value={true}>Active</option>
-                <option value={false}>Inactive</option>
-              </select>
-
-              {/* Buttons */}
-              <div className="flex justify-end gap-3">
+              <div className="flex justify-end gap-2 mt-4">
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="px-4 py-2 bg-gray-200 rounded"
+                  className="px-4 py-2 border rounded"
                 >
                   Cancel
                 </button>
