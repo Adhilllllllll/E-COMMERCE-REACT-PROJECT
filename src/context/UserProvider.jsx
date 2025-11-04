@@ -37,7 +37,7 @@ useEffect(() => {
   if (loggedInUser?.role === "admin") {
     fetchUsers();
   } else {
-    console.log("Not an admin. Skipping fetchUsers.");
+    // console.log("Not an admin. Skipping fetchUsers.");
   }
 }, [loggedInUser]);
 
@@ -61,7 +61,7 @@ useEffect(() => {
     }
   };
 
-  // ✅ Delete user
+  //  Delete user
   const deleteUser = async (id) => {
     try {
       await api.delete(`/users/${id}`);

@@ -18,7 +18,7 @@ const UserManagement = () => {
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Email</th>
               <th className="px-4 py-3">Role</th>
-              <th className="px-4 py-3">Mobile</th>
+              {/* <th className="px-4 py-3">Mobile</th> */}
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Actions</th>
             </tr>
@@ -29,7 +29,7 @@ const UserManagement = () => {
                 <td className="px-4 py-3">{u.name}</td>
                 <td className="px-4 py-3">{u.email}</td>
                 <td className="px-4 py-3">{u.role}</td>
-                <td className="px-4 py-3">{u.address?.mobile}</td>
+                {/* <td className="px-4 py-3">{u.address?.mobile}</td> */}
                 <td className="px-4 py-3">
                   <span
                     className={`px-2 inline-flex text-xs font-semibold rounded-full ${
