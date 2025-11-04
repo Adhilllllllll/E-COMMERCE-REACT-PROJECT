@@ -12,23 +12,34 @@ const AuthProvider = ({ children }) => {
 
   // 🔹 Auto-load user from backend cookie
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await api.get("/users/me", { withCredentials: true });
-        const user = res.data.data;
+  const fetchUser = async () => {
+    try {
+      //  always send credentials (JWT cookie)
+      const res = await api.get("/users/me", { withCredentials: true });
 
-        // Normalize role: user -> customer
-        if (user.role === "user") user.role = "customer";
+      const user = res.data?.data;
+      if (!user) throw new Error("No user data returned from /users/me");
 
-        setLoggedInUser(user);
-      } catch (err) {
-        setLoggedInUser(null);
-      } finally {
-        setLoading(false);
+      // Normalize role
+      if (user.role === "user") user.role = "customer";
+
+      setLoggedInUser(user);
+    } catch (err) {
+      console.warn("⚠️ Failed to fetch logged-in user:", err.response?.data || err.message);
+
+      // If backend explicitly says "Please login first", likely cookie not sent
+      if (err.response?.data?.message?.includes("Please login")) {
+        console.warn("🚫 JWT cookie missing or blocked by browser (CORS/sameSite issue).");
       }
-    };
-    fetchUser();
-  }, []);
+
+      setLoggedInUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchUser();
+}, []);
 
   // 🔹 REGISTER
   const registration = async (formData) => {
@@ -119,6 +130,7 @@ const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         loggedInUser,
+        setLoggedInUser,
         loading,
         registration,
         login,

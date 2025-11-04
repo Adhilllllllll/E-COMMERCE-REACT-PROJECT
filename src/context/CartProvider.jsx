@@ -68,16 +68,16 @@ const CartProvider = ({ children }) => {
   //  Remove item from cart
   const removeFromCart = async (productId) => {
     try {
-      await api.delete(`/carts/deleteFromCart/${productId}`, { withCredentials: true });
-      setCart((prev) => prev.filter((item) => item.productId._id !== productId));
+      setCart([]);
       toast.success("Removed from cart");
     } catch (err) {
       console.error("Error removing from cart:", err.response?.data || err.message);
       toast.error("Failed to remove item");
     }
+    console.log(productId)
   };
 
-  // ✅ Update item quantity
+  //  Update item quantity
   const updateQuantity = async (productId, quantity) => {
     if (quantity < 1) return;
 

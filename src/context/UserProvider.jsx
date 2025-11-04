@@ -13,7 +13,7 @@ export const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(true); // Loading indicator
   const [error, setError] = useState(null);     // Error handling
   const {loggedInUser} =useContext(AuthContext);
-  // ✅ Fetch all users (for admin)
+  //  Fetch all users (for admin)
  const fetchUsers = async () => {
   try {
     setLoading(true);
@@ -43,7 +43,7 @@ useEffect(() => {
 
 
 
-  // ✅ Toggle block/unblock user
+  //  Toggle block/unblock user
   const toggleBlockUser = async (id) => {
     try {
       const res = await api.patch(`/users/${id}/block`);
