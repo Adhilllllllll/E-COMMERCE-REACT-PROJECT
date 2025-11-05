@@ -36,8 +36,8 @@ const Payment = () => {
   const { cart, fetchCart, deleteFromCart } = useContext(CartContext);
   const { loggedInUser ,setLoggedInUser} = useContext(AuthContext);
   const navigate = useNavigate();
-  console.log('hjkhjh')
-  console.log(loggedInUser)
+  // console.log('hjkhjh')
+  // console.log(loggedInUser)
 
   const [selectedAddress, setSelectedAddress] = useState(loggedInUser?.address || null);
   const [showAddressForm, setShowAddressForm] = useState(!selectedAddress);
