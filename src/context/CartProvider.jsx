@@ -66,16 +66,24 @@ const CartProvider = ({ children }) => {
   };
 
   //  Remove item from cart
-  const removeFromCart = async (productId) => {
-    try {
-      setCart([]);
+const deleteFromCart = async (productId) => {
+  try {
+    // Call backend to remove item from cart
+    const res = await api.delete(`/carts/deleteFromCart/${productId}`, { withCredentials: true });
+
+    if (res.data.status === "success") {
+      // ✅ Update state: remove only the selected product
+      setCart((prev) => prev.filter((item) => item.productId._id !== productId));
       toast.success("Removed from cart");
-    } catch (err) {
-      console.error("Error removing from cart:", err.response?.data || err.message);
-      toast.error("Failed to remove item");
+    } else {
+      toast.error(res.data.message || "Failed to remove item");
     }
-    console.log(productId)
-  };
+  } catch (err) {
+    console.error("Error removing from cart:", err.response?.data || err.message);
+    toast.error("Failed to remove item");
+  }
+};
+
 
   //  Update item quantity
   const updateQuantity = async (productId, quantity) => {
@@ -102,7 +110,7 @@ const CartProvider = ({ children }) => {
         loading,
         fetchCart,
         addToCart,
-        removeFromCart,
+        deleteFromCart,
         updateQuantity,
         cartCount: cart.reduce((sum, item) => sum + (item.quantity || 0), 0),
       }}

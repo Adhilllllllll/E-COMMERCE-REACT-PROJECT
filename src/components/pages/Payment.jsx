@@ -33,7 +33,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const Payment = () => {
-  const { cart, fetchCart, removeFromCart } = useContext(CartContext);
+  const { cart, fetchCart, deleteFromCart } = useContext(CartContext);
   const { loggedInUser ,setLoggedInUser} = useContext(AuthContext);
   const navigate = useNavigate();
   console.log('hjkhjh')
@@ -87,11 +87,14 @@ const Payment = () => {
       }
 
       const newOrder = res.data.data;
-      console.log(`loggedin${loggedInUser}`)
-      // loggedInUser({ ...loggedInUser, address: addressToUse });
-      setLoggedInUser({ ...loggedInUser, address: addressToUse });
+      // console.log(`loggedin${loggedInUser}`)
+       setLoggedInUser({ ...loggedInUser, address: addressToUse });
       
-      removeFromCart();
+      // for (const item of cart){
+      //   await deleteFromCart(item.productId._id);
+      // }
+     await fetchCart();
+
       toast.success("🎉 Order placed successfully!");
       navigate("/order", { state: { order: newOrder } });
     } catch (error) {

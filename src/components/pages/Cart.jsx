@@ -4,7 +4,7 @@ import { CartContext } from "../../context/CartProvider";
 import { Navigate, useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  const { cart, removeFromCart, updateQuantity, loading } =
+  const { cart, deleteFromCart, updateQuantity, loading } =
     useContext(CartContext);
     const navigate = useNavigate();
   if (loading) return <p className="text-center mt-10">Loading cart...</p>;
@@ -79,7 +79,7 @@ const Cart = () => {
               </button>
 
               <button
-                onClick={() => removeFromCart(item.productId._id)}
+                onClick={() => deleteFromCart(item.productId._id)}
                 className="ml-4 px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
               >
                 Remove
