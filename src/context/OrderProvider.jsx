@@ -52,17 +52,23 @@ export default function OrderProvider({ children }) {
     }
   };
 
-  // 🔹 Update order status (admin)
+   
+
   const updateOrderStatus = async (orderId, newStatus) => {
-    try {
-      await api.put(`/admin/changeOrderStatus/${orderId}`, { status: newStatus }, { withCredentials: true });
-      toast.success("Order status updated!");
-      fetchAllOrders();
-    } catch (err) {
-      console.error("Failed to update status:", err.response?.data || err.message);
-      toast.error("Failed to update order status");
-    }
-  };
+  try {
+    await api.put(
+      `/admin/changeOrderStatus/${orderId}`,
+      { status: newStatus },
+      { withCredentials: true }
+    );
+    toast.success("Order status updated!");
+    fetchAllOrders();
+  } catch (err) {
+    console.error("Failed to update status:", err.response?.data || err.message);
+    toast.error(err.response?.data?.message || "Failed to update order status");
+  }
+};
+
 
   // 🔹 Pay order (user)
   const payOrder = async (orderId) => {

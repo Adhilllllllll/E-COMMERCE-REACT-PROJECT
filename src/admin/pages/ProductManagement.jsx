@@ -7,9 +7,9 @@ const defaultForm = {
   category: "",
   price: "",
   count: 0,
-  isActive: true,       // status field
+  isActive: true,
   image: null,
-  description: "",      // description field
+  description: "",
 };
 
 const ProductManagement = () => {
@@ -22,11 +22,9 @@ const ProductManagement = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
 
-  // Open form for adding or editing product
   const openForm = (product = null) => {
     setEditingProduct(product);
     if (product) {
-      // Ensure isActive is boolean
       setFormData({
         ...product,
         isActive: !!product.isActive,
@@ -77,81 +75,125 @@ const ProductManagement = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
+      {/* Header Section */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold">Product Management</h2>
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Product Management
+        </h2>
         <button
           onClick={() => openForm()}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg transition-all"
         >
           + Add New Product
         </button>
       </div>
 
-      <table className="min-w-full divide-y divide-gray-200 mb-6">
-        <thead>
-          <tr>
-            {[
-              "Image",
-              "Name",
-              "Category",
-              "Description",
-              "Price",
-              "Stock",
-              "Status",
-              "Actions",
-            ].map((col) => (
-              <th key={col} className="px-4 py-2">
-                {col}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((p) => (
-            <tr key={p.id}>
-              <td className="px-4 py-2">
-                <img
-                  src={p.image}
-                  alt={p.name}
-                  className="w-12 h-12 object-cover rounded"
-                />
-              </td>
-              <td>{p.name}</td>
-              <td>{p.category}</td>
-              <td>{p.description}</td>
-              <td>${p.price}</td>
-              <td>{p.count}</td>
-              <td>{p.isActive ? "Active" : "Inactive"}</td>
-              <td className="flex gap-2">
-                <button onClick={() => openForm(p)} className="text-blue-600">
-                  Edit
-                </button>
-                <button
-                  onClick={() => {
-                    Swal.fire({
-                      title: "Are you sure?",
-                      text: "You won't be able to revert this!",
-                      icon: "warning",
-                      showCancelButton: true,
-                      confirmButtonText: "Yes, delete it!",
-                    }).then((result) => {
-                      if (result.isConfirmed) deleteProduct(p.id);
-                    });
-                  }}
-                  className="text-red-600"
+      {/* Product Table */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full border border-gray-300 rounded-lg text-center">
+          <thead className="bg-gray-100">
+            <tr>
+              {[
+                "Image",
+                "Name",
+                "Category",
+                "Description",
+                "Price",
+                "Stock",
+                "Status",
+                "Actions",
+              ].map((col) => (
+                <th
+                  key={col}
+                  className="px-4 py-3 text-sm font-semibold text-gray-700 border-b border-gray-300"
                 >
-                  Delete
-                </button>
-              </td>
+                  {col}
+                </th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {products.length === 0 ? (
+              <tr>
+                <td
+                  colSpan="8"
+                  className="py-6 text-gray-500 italic text-center"
+                >
+                  No products found.
+                </td>
+              </tr>
+            ) : (
+              products.map((p) => (
+                <tr
+                  key={p.id}
+                  className="hover:bg-gray-50 transition-all border-b border-gray-200"
+                >
+                  <td className="py-3">
+                    <img
+                      src={p.image}
+                      alt={p.name}
+                      className="w-14 h-14 object-cover mx-auto rounded-md border"
+                    />
+                  </td>
+                  <td className="px-4 py-3 font-medium text-gray-800">
+                    {p.name}
+                  </td>
+                  <td className="px-4 py-3 text-gray-600">{p.category}</td>
+                  <td className="px-4 py-3 text-gray-600 truncate max-w-[200px] mx-auto">
+                    {p.description}
+                  </td>
+                  <td className="px-4 py-3 text-gray-700 font-semibold">
+                    ₹{p.price}
+                  </td>
+                  <td className="px-4 py-3 text-gray-700">{p.count}</td>
+                  <td
+                    className={`px-4 py-3 font-medium ${
+                      p.isActive ? "text-green-600" : "text-red-600"
+                    }`}
+                  >
+                    {p.isActive ? "Active" : "Inactive"}
+                  </td>
 
+                  <td className="px-4 py-3">
+                    <div className="flex justify-center items-center gap-3">
+                      <button
+                        onClick={() => openForm(p)}
+                        className="text-blue-600 hover:text-blue-800 font-medium transition-all"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => {
+                          Swal.fire({
+                            title: "Are you sure?",
+                            text: "You won't be able to revert this!",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Yes, delete it!",
+                          }).then((result) => {
+                            if (result.isConfirmed) deleteProduct(p.id);
+                          });
+                        }}
+                        className="text-red-600 hover:text-red-800 font-medium transition-all"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-lg">
-            <h3 className="text-lg font-semibold mb-4">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+            <h3 className="text-lg font-semibold mb-4 text-gray-800">
               {editingProduct ? "Edit Product" : "Add Product"}
             </h3>
             <form onSubmit={handleSubmit} className="space-y-3">
@@ -216,14 +258,19 @@ const ProductManagement = () => {
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
               </select>
-              <input type="file" accept="image/*" onChange={handleFileChange} />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="w-full border p-2 rounded"
+              />
 
               {previewImage && (
-                <div className="mt-2 relative w-32 h-32">
+                <div className="mt-2 relative w-32 h-32 mx-auto">
                   <img
                     src={previewImage}
                     alt="preview"
-                    className="w-full h-full object-cover rounded"
+                    className="w-full h-full object-cover rounded border"
                   />
                   <button
                     type="button"
@@ -231,7 +278,7 @@ const ProductManagement = () => {
                       setSelectedFile(null);
                       setPreviewImage(null);
                     }}
-                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
                   >
                     &times;
                   </button>
@@ -242,13 +289,13 @@ const ProductManagement = () => {
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="px-4 py-2 border rounded"
+                  className="px-4 py-2 border rounded hover:bg-gray-100 transition-all"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded"
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-all"
                 >
                   {editingProduct ? "Update" : "Add"}
                 </button>

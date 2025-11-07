@@ -4,23 +4,39 @@ import { CartContext } from "../../context/CartProvider";
 import { useWishlist } from "../../context/WishListProvider";
 import { AuthContext } from "../../context/AuthProvider";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom"; // ✅ added
 import Swal from "sweetalert2";
 
 const ShoppingPage = () => {
-  const { filteredProducts, filterProduct, productSearch, setProductSearch } =
-    useContext(ProductContext);
+  const {
+    filteredProducts,
+    filterProduct,
+    productSearch,
+    setProductSearch,
+    products,
+  } = useContext(ProductContext);
+
   const { cart, addToCart } = useContext(CartContext);
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { loggedInUser } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [select, setSelect] = useState("all");
 
+  // ✅ Use URL params to persist filter
+  const [searchParams, setSearchParams] = useSearchParams();
+  const defaultCategory = searchParams.get("category") || "all";
+  const [select, setSelect] = useState(defaultCategory);
+
+  // ✅ Update filter + URL on change
+  const handleFilter = (e) => {
+    const value = e.target.value;
+    setSelect(value);
+    setSearchParams({ category: value });
+  };
+
+  // ✅ Filter products whenever selection or product list changes
   useEffect(() => {
     filterProduct(select);
-  }, [select]);
-
-  const handleFilter = (e) => setSelect(e.target.value);
+  }, [select, products]);
 
   const handleProductClick = (productId) =>
     navigate(`/productdetails/${productId}`);
@@ -102,9 +118,10 @@ const ShoppingPage = () => {
             onChange={handleFilter}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent"
           >
+            {/* ✅ use lowercase values */}
             <option value="all">All</option>
-            <option value="Men">Men</option>
-            <option value="Women">Female</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
           </select>
         </div>
 

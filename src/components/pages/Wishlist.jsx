@@ -6,6 +6,7 @@ import { AuthContext } from "../../context/AuthProvider";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import PageWrapper from "../layout/PageWrapper";
 
 const Wishlist = () => {
   const { wishlist, removeFromWishlist, loading } = useWishlist();
@@ -71,6 +72,7 @@ const Wishlist = () => {
 
   // ✅ Wishlist grid
   return (
+     <PageWrapper>
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
@@ -170,6 +172,7 @@ const Wishlist = () => {
         </div>
       </div>
     </div>
+    </PageWrapper>
   );
 };
 

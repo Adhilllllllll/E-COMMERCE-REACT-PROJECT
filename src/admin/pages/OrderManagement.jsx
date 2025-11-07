@@ -1,3 +1,6 @@
+ 
+
+
 import { useContext, useEffect } from "react";
 import { OrderContext } from "../../context/OrderProvider";
 
@@ -10,7 +13,8 @@ export default function OrderManagement() {
 
   const handleStatusChange = (orderId, e) => {
     const newStatus = e.target.value;
-    updateOrderStatus(orderId, newStatus);
+    if (!newStatus) return;
+    updateOrderStatus(orderId, newStatus.toLowerCase()); // lowercase matches backend enum
   };
 
   if (loading) {
@@ -27,35 +31,41 @@ export default function OrderManagement() {
         <div className="grid gap-6">
           {orders.map((order) => (
             <div
-              key={order._id || order.id}
+              key={order._id}
               className="bg-white shadow-md rounded-xl p-5 border border-gray-200 hover:shadow-lg transition duration-200"
             >
               {/* Order Info */}
               <div className="mb-3">
                 <p className="text-sm text-gray-500">
-                  <strong className="text-gray-700">Order ID:</strong> {order._id || order.id}
+                  <strong className="text-gray-700">Order ID:</strong> {order._id}
                 </p>
+
                 <p className="text-sm text-gray-500">
                   <strong className="text-gray-700">User:</strong>{" "}
-                  {order.user?.name || "Unknown"} ({order.user?.email || "No Email"})
+                  {order.userId?.name || "Unknown"} ({order.userId?.email || "No Email"})
                 </p>
+
                 <p className="text-sm text-gray-500">
-                  <strong className="text-gray-700">Total:</strong> ₹{order.totalAmount || 0}
+                  <strong className="text-gray-700">Total:</strong> ₹{order.totalPrice || 0}
                 </p>
+
                 <p className="text-sm text-gray-500">
                   <strong className="text-gray-700">Status:</strong>{" "}
-                  <span className="font-medium text-blue-600">{order.status || "Not Set"}</span>
+                  <span className="font-medium text-blue-600">
+                    {order.status || "Not Set"}
+                  </span>
                 </p>
               </div>
 
-              {/* Order Items */}
-              {order.orderItems && order.orderItems.length > 0 && (
+              {/* Product Items */}
+              {order.products && order.products.length > 0 && (
                 <div className="mb-3">
                   <p className="text-gray-700 font-semibold mb-1">Items:</p>
                   <ul className="list-disc ml-5 text-gray-600 text-sm">
-                    {order.orderItems.map((item, i) => (
+                    {order.products.map((item, i) => (
                       <li key={i}>
-                        {item.productName} × {item.quantity} — ₹{item.price}
+                        {item.productId?.name || "Unnamed Product"} × {item.quantity} — ₹
+                        {item.productId?.price || 0}
                       </li>
                     ))}
                   </ul>
@@ -65,15 +75,15 @@ export default function OrderManagement() {
               {/* Status Dropdown */}
               <select
                 value={order.status}
-                onChange={(e) => handleStatusChange(order._id || order.id, e)}
+                onChange={(e) => handleStatusChange(order._id, e)}
                 className="w-full sm:w-1/2 p-2 border border-gray-300 rounded-lg text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
                 <option value="">Select Status</option>
-                <option value="Pending">Pending</option>
-                <option value="Processing">Processing</option>
-                <option value="Shipped">Shipped</option>
-                <option value="Delivered">Delivered</option>
-                <option value="Cancelled">Cancelled</option>
+                <option value="pending">Pending</option>
+                <option value="processing">Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                {/* <option value="cancel">Cancel</option> */}
               </select>
             </div>
           ))}
@@ -82,3 +92,4 @@ export default function OrderManagement() {
     </div>
   );
 }
+

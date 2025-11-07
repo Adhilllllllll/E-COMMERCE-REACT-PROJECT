@@ -9,37 +9,35 @@ const AuthProvider = ({ children }) => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
-  // 🔹 Auto-load user from backend cookie
+ 
   useEffect(() => {
-  const fetchUser = async () => {
-    try {
-      //  always send credentials (JWT cookie)
-      const res = await api.get("/users/me", { withCredentials: true });
+    const fetchUser = async () => {
+      try {
+        const res = await api.get("/users/me");
+        const user = res.data?.data;
 
-      const user = res.data?.data;
-      if (!user) throw new Error("No user data returned from /users/me");
-
-      // Normalize role
-      if (user.role === "user") user.role = "customer";
-
-      setLoggedInUser(user);
-    } catch (err) {
-      console.warn("⚠️ Failed to fetch logged-in user:", err.response?.data || err.message);
-
-      // If backend explicitly says "Please login first", likely cookie not sent
-      if (err.response?.data?.message?.includes("Please login")) {
-        console.warn("🚫 JWT cookie missing or blocked by browser (CORS/sameSite issue).");
+        if (user) {
+          if (user.role === "user") user.role = "customer";
+          setLoggedInUser(user);
+        } else {
+          setLoggedInUser(null);
+        }
+      } catch (err) {
+        // Silently handle 401 (already handled by interceptor)
+        if (err.response?.status !== 401) {
+          console.error("Auth fetch error:", err.response?.data || err.message);
+        }
+        setLoggedInUser(null);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      setLoggedInUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchUser();
+  }, []);
 
-  fetchUser();
-}, []);
+
+ 
 
   // 🔹 REGISTER
   const registration = async (formData) => {
@@ -91,16 +89,21 @@ const AuthProvider = ({ children }) => {
   };
 
   // 🔹 LOGOUT
-  const logout = async () => {
-    try {
-      await api.post("/auth/logout");
-      setLoggedInUser(null);
-      toast.info("👋 Logged out successfully!");
-      navigate("/login", { replace: true });
-    } catch (error) {
-      toast.error("Logout failed!");
-    }
-  };
+const logout = async () => {
+  try {
+    await api.post("/auth/logout", {}, { withCredentials: true }); // ensure cookie is sent
+    setLoggedInUser(null);
+    toast.info("👋 Logged out successfully!");
+    navigate("/login", { replace: true });
+  } catch (error) {
+    console.warn("Logout: cookie may already be cleared or expired.", error?.response?.data || error.message);
+    toast.error("Logout failed or already logged out!");
+  } finally {
+    // Double safety: clear user context even if server call fails
+    setLoggedInUser(null);
+  }
+};
+
 
   // 🔹 FORGOT PASSWORD
   const forgotPassword = async (email) => {

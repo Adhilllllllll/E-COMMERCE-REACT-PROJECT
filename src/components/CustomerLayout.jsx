@@ -7,7 +7,7 @@ const CustomerLayout = () => {
   const location = useLocation();
 
   // footer should hide
-  const hideFooterRoutes = ["/cart",'/orders'];
+  const hideFooterRoutes = ["/cart",'/orders','/wishlist','/payment','/order'];
 
   // navbar should hide
   const hideNavRoutes=[];

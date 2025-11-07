@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import api from "../../api/Api";
+import PageWrapper from "../layout/PageWrapper";
 
 // ✅ Fixed UPI regex
 const validationSchema = Yup.object().shape({
@@ -123,6 +124,7 @@ const Payment = () => {
   }
 
   return (
+    <PageWrapper>
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
@@ -188,7 +190,7 @@ const Payment = () => {
                 <div className="bg-white shadow rounded-lg p-6">
                   <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
                   <div className="flex space-x-4 mb-4">
-                    {["cod", "upi"].map((method) => (
+                    {["cod" /*, "upi" */].map((method) => (
                       <label
                         key={method}
                         className={`px-4 py-2 rounded-md cursor-pointer ${
@@ -212,7 +214,7 @@ const Payment = () => {
                     component="div"
                     className="text-red-500 text-sm mb-2"
                   />
-                  {values.paymentMethod === "upi" && (
+                  {/* {values.paymentMethod === "upi" && (
                     <div>
                       <label className="block text-gray-700 text-sm font-medium mb-1">
                         Enter UPI ID
@@ -229,7 +231,7 @@ const Payment = () => {
                         className="text-red-500 text-sm mt-1"
                       />
                     </div>
-                  )}
+                  )} */}
                   <button
                     type="submit"
                     // disabled={isSubmitting}
@@ -291,6 +293,7 @@ const Payment = () => {
         </Formik>
       </div>
     </div>
+    </PageWrapper>
   );
 };
 
